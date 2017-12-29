@@ -1,9 +1,36 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
         <!-- Extending presupuesto compromiso Form View -->
         <record id="view_presupuesto_move_compromiso_inherit_form" model="ir.ui.view">
            <field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_form"/>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='move_rel']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Extending presupuesto obligacion Form View -->
+        <record id="view_presupuesto_move_obligacion_inherit_form" model="ir.ui.view">
+           <field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_form"/>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='move_rel']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Extending presupuesto pago presupuestal Form View -->
+        <record id="view_presupuesto_move_pago_inherit_form" model="ir.ui.view">
+           <field name="inherit_id" ref="presupuesto.view_presupuesto_pago_move_form"/>
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
 

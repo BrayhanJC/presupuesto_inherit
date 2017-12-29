@@ -29,11 +29,11 @@
     'description': """
     Create a module for managing the budget in public entities
     """,
-    'author': ['Brayhan Jaramillo / Juan Zuluaga'],
+    'author': 'Brayhan Jaramillo / Juan Zuluaga',
     'website': 'http://www.openerp.com/',
     'license': 'AGPL-3',
     'depends': [
-        'Presupuesto',
+        'presupuesto',
     ],
     'data': [
         'view/co_presupuesto_view_inherit.xml',
