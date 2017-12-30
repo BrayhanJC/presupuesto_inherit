@@ -40,6 +40,7 @@ _logger = logging.getLogger(__name__)
 
 class presupuesto_move_compromiso_inherit(osv.osv):
 	_inherit = 'presupuesto.move'
+	_order = 'date desc'
 
 	_columns = {
 		'presupuesto_rel_move': fields.many2many('presupuesto.move', 
@@ -54,7 +55,6 @@ class presupuesto_move_compromiso_inherit(osv.osv):
 		val_rel_ids= self.presupuesto_rel_move
 		lista_rubros = []
 		for x in val_rel_ids:
-
 			rpre_moverubros = self.env['presupuesto.moverubros']
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
 			
