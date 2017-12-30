@@ -24,3 +24,4 @@
 ##############################################################################
 
 import co_presupuesto_inherit
+import co_presupuesto_moverubros_inherit
