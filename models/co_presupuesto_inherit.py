@@ -36,6 +36,7 @@ _logger = logging.getLogger(__name__)
 
 class presupuesto_move_compromiso_inherit(models.Model):
     _inherit = 'presupuesto.move'
+    _order = 'date desc'
 
 
 

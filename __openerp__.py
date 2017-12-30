@@ -36,7 +36,7 @@
         'presupuesto',
     ],
     'data': [
-        'view/co_presupuesto_view_inherit.xml',
+        'views/co_presupuesto_view_inherit.xml',
     ],
     'installable': True,
     'auto_install': False,
