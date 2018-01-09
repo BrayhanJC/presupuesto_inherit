@@ -101,8 +101,58 @@
 
 
 
-        <record id="presupuesto_move_inherit_search_form" model="ir.ui.view">
+        <record id="presupuesto_move_cdp_inherit_search_form" model="ir.ui.view">
             <field name="name">presupuesto.move_view_search</field>
+            <field name="model">presupuesto.move</field>
+            <field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="/search[@string='Search CDP']/group[@expand='0']/filter[@string='Status']" position="after">
+                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                </xpath> 
+
+
+            </field>
+        </record>
+
+        <record id="presupuesto_move_com_inherit_search_form" model="ir.ui.view">
+            <field name="name">presupuesto.move_view_com_search</field>
+            <field name="model">presupuesto.move</field>
+            <field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_search"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="move_rel"/>
+                </field>
+
+                <xpath expr="/search[@string='Search Compromiso']/group[@expand='0']/filter[@string='Status']" position="after">
+                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                </xpath> 
+
+
+            </field>
+        </record>
+
+
+        <record id="presupuesto_move_obl_inherit_search_form" model="ir.ui.view">
+            <field name="name">presupuesto.move_view_obl_search</field>
+            <field name="model">presupuesto.move</field>
+            <field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_search"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="move_rel"/>
+                    <field name="partner_id"/>
+                </field>
+
+                <xpath expr="/search[@string='Search Obligación']/group[@expand='0']/filter[@string='Status']" position="after">
+                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                </xpath> 
+
+
+            </field>
+        </record>
+
+
+        <record id="presupuesto_move_pago_inherit_search_form" model="ir.ui.view">
+            <field name="name">presupuesto.move_view_pago_search</field>
             <field name="model">presupuesto.move</field>
             <field name="inherit_id" ref="presupuesto.view_presupuesto_pago_move_search"/>
             <field name="arch" type="xml">
@@ -118,6 +168,11 @@
 
             </field>
         </record>
+
+
+
+
+
 
 
 

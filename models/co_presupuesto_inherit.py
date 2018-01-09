@@ -49,6 +49,17 @@ class presupuesto_move_inherit(models.Model):
 						column1='cdp_ids',
 						column2='compromiso_ids')
 
+	doc_type = fields.Selection([
+								('ini', 'Inicial'),
+								('mod', 'Modificacón'),
+								('rec', 'Recaudo'),
+								('cdp', 'CDP'),
+								('reg', 'Compromiso'),
+								('obl', 'Obligación'),
+								('pago', 'Pago'),
+								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
+
+
 	@api.one
 	def _compute_data(self):
 
