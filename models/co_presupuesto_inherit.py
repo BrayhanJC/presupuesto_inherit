@@ -49,6 +49,7 @@ class presupuesto_move_compromiso_inherit(osv.osv):
 												'CDP', required=False, ondelete='restrict'),
 		}
 
+		
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_cdp_ids(self):
 		
@@ -59,7 +60,7 @@ class presupuesto_move_compromiso_inherit(osv.osv):
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
 			
 			for rubro in cdp_moverubros:
-				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id}))
+				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 
