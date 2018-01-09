@@ -27,6 +27,7 @@ import logging
 import difflib
 from openerp import models, fields, api, _
 from openerp.osv import fields, osv
+from openerp import models, fields
 import re
 import codecs
 from openerp.tools.translate import _
@@ -41,6 +42,10 @@ _logger = logging.getLogger(__name__)
 
 class presupuesto_moverubros_inherit(models.Model):
 	_inherit = 'presupuesto.moverubros'
+
+	presupuesto_move_name= fields.Char(String= "Documento", readonly=True)
+
+
 
 	@api.one
 	@api.depends('ammount', 'saldo_move')
@@ -89,8 +94,7 @@ class presupuesto_moverubros_inherit(models.Model):
 
 		return move_saldo
 
-	_columns = {
-		'presupuesto_move_name': fields.char('Documento', readonly=True),
-		}
+
+
 
 presupuesto_moverubros_inherit()
