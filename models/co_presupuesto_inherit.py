@@ -27,6 +27,7 @@ import logging
 import difflib
 from openerp import models, fields, api, _
 from openerp.osv import fields, osv
+from openerp import models, fields
 import re
 import codecs
 from openerp.tools.translate import _
@@ -38,16 +39,30 @@ import time
 from datetime import date, datetime, timedelta
 _logger = logging.getLogger(__name__)
 
-class presupuesto_move_compromiso_inherit(osv.osv):
+class presupuesto_move_inherit(models.Model):
 	_inherit = 'presupuesto.move'
 	_order = 'date desc'
 
-	_columns = {
-		'presupuesto_rel_move': fields.many2many('presupuesto.move', 
-												'presupuesto_cdp_compromiso',
-												'cdp_ids', 'compromiso_ids', 
-												'CDP', required=False, ondelete='restrict'),
-		}
+	compute_data= fields.Char(compute='_compute_data')
+	presupuesto_rel_move = fields.Many2many(comodel_name='presupuesto.move',
+						relation='presupuesto_cdp_compromiso',
+						column1='cdp_ids',
+						column2='compromiso_ids')
+
+	@api.one
+	def _compute_data(self):
+
+		_logger.info('Entrando en compute')
+
+		for x in self:
+			rpre_moverubros = self.env['presupuesto.moverubros']
+			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
+			_logger.info(x.description)
+			
+			for rubro in cdp_moverubros:
+				_logger.info(rubro.id)
+
+
 
 		
 	@api.onchange('presupuesto_rel_move')
@@ -65,4 +80,4 @@ class presupuesto_move_compromiso_inherit(osv.osv):
 		self.gastos_ids = lista_rubros
 
 
-presupuesto_move_compromiso_inherit()
+presupuesto_move_inherit()
