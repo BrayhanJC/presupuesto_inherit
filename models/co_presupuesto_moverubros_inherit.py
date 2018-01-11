@@ -43,7 +43,23 @@ _logger = logging.getLogger(__name__)
 class presupuesto_moverubros_inherit(models.Model):
 	_inherit = 'presupuesto.moverubros'
 
-	presupuesto_move_name= fields.Char(string=u'Documento', size=25, store=True )
+
+	presupuesto_move_name= fields.Char(string=u'Documento', size=25, required=True)
+	mov_type = fields.Selection([
+								('ini', 'Inicial'),
+								('adi', 'Adición'),
+								('red', 'Reducción'),
+								('cre', 'Crédito'),
+								('cont', 'Contracrédito'),
+								('rec', 'Recaudo'),
+								('cdp', 'CDP'),
+								('reg', 'Compromiso'),
+								('obl', 'Obligación'),
+								('pago', 'Pago'),
+								('lcdp', 'Liberación CDP'),
+								('lreg', 'Liberación Compromiso'),
+								('lobl', 'Liberación Obligación')], 'Tipo', select=True, required=True)
+
 
 	@api.one
 	@api.depends('ammount', 'saldo_move')
