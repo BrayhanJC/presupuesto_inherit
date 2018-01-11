@@ -48,23 +48,38 @@ class presupuesto_move_inherit(models.Model):
 						relation='presupuesto_cdp_compromiso',
 						column1='cdp_ids',
 						column2='compromiso_ids')
+	cargar_datos= fields.Char(String='Datos')
 
 	@api.one
 	def _compute_data(self):
 
 		_logger.info('Entrando en compute')
+		lista_rubros = []
+		cdp_moverubros=None
 
-		for x in self:
+		val_rel_ids= self.presupuesto_rel_move
+		lista_rubros = []
+		for x in val_rel_ids:
 			rpre_moverubros = self.env['presupuesto.moverubros']
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
-			_logger.info(x.description)
 			
 			for rubro in cdp_moverubros:
-				_logger.info(rubro.id)
+				_logger.info(x.id)
+				_logger.info(rubro.rubros_id.id)
+				#rubro.write({'presupuesto_move_name': x.name})
+				sql = """ update presupuesto_moverubros set presupuesto_move_name = '%(move_name)s' where id = %(id_name)s """%{
+					'move_name' : x.name,
+					'id_name': rubro.id,
+				}
+				self.env.cr.execute( sql )
+				#lista_rubros.append((0,0,{'move_id' : x.id , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
+		#cargando gastos
+		self.cargar_datos="hola"
+		self.compute_data= 'hola'
+		self.env.cr.execute("SELECT * FROM presupuesto_moverubros")
+		return self.env.cr.fetchall()
 
 
-
-		
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_cdp_ids(self):
 		
@@ -75,7 +90,7 @@ class presupuesto_move_inherit(models.Model):
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
 			
 			for rubro in cdp_moverubros:
-				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
+				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.ammount, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 

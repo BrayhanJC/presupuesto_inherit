@@ -43,10 +43,7 @@ _logger = logging.getLogger(__name__)
 class presupuesto_moverubros_inherit(models.Model):
 	_inherit = 'presupuesto.moverubros'
 
-	presupuesto_move_name= fields.Char(string=u'Documento', size=25, required=True)
-
-
-
+	presupuesto_move_name= fields.Char(string=u'Documento', size=25, store=True )
 
 	@api.one
 	@api.depends('ammount', 'saldo_move')
