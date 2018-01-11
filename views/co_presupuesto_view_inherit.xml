@@ -9,13 +9,11 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='move_rel']" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp')]" String="CDP"/>
-                    <field name="compute_data" invisible="0"/>
-                    <field name="cargar_datos" invisible="0"/>
                 </field>
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -42,13 +40,11 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='move_rel']" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg')]" String="Compromiso"/>
-                    <field name="compute_data" invisible="0"/>
-                    <field name="cargar_datos" invisible="0"/>
                 </field>    
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -76,13 +72,11 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='move_rel']" position="attributes">
-                    <attribute name="invisible">0</attribute>
+                    <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl')]" String="Obligación"/>
-                    <field name="compute_data" invisible="0"/>
-                    <field name="cargar_datos" invisible="0"/>
                 </field> 
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">

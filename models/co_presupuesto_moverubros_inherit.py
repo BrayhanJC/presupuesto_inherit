@@ -44,7 +44,7 @@ class presupuesto_moverubros_inherit(models.Model):
 	_inherit = 'presupuesto.moverubros'
 
 
-	presupuesto_move_name= fields.Char(string=u'Documento', size=25, required=True)
+	presupuesto_move_name= fields.Char(string=u'Documento', size=25)
 	mov_type = fields.Selection([
 								('ini', 'Inicial'),
 								('adi', 'Adición'),
