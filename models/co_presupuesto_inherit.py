@@ -46,7 +46,7 @@ class presupuesto_move_inherit(models.Model):
 	presupuesto_rel_move = fields.Many2many(comodel_name='presupuesto.move',
 						relation='presupuesto_cdp_compromiso',
 						column1='cdp_ids',
-						column2='compromiso_ids')
+						column2='compromiso_ids', states={'confirm': [('readonly', True)]})
 	doc_type = fields.Selection([
 								('ini', 'Inicial'),
 								('mod', 'Modificacón'),
