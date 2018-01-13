@@ -58,6 +58,56 @@ class presupuesto_move_inherit(models.Model):
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
 
 
+	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
+
+
+
+	""" 
+		metodo computado que nos ayuda a cambiar el estado a la variable hide_button_confirm
+		para saber si el boton lo ocultamos, cambia el estado de la variable a verdadero si 
+		la diferencia es <= 0. 
+
+	"""
+
+	@api.one
+	@api.depends('gastos_ids')
+	def _hide_button_confirm(self):
+
+		if self.gastos_ids:
+			diff = self._get_diff_money(self.gastos_ids)
+
+			if diff <= 0:
+				self.hide_button_confirm = True
+			else:
+				self.hide_button_confirm = False
+
+			_logger.info(self.hide_button_confirm)
+			_logger.info(diff)
+
+
+
+
+	""" 
+		metodo que nos sirve para saber si en los rubros que tiene el cdp, compromiso
+		o obligacion el monto de los gastos es igual.
+
+		recibe los ids de los rubros.
+		
+		retorna la diferencia entre el presupuesto y los gastos
+	"""
+
+	def _get_diff_money(self, ids):
+
+		if ids:
+			saldo_move = 0
+			ammount = 0
+			for data in ids:
+				saldo_move += data.saldo_move
+				ammount += data.ammount
+			return saldo_move - ammount
+
+
+
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_cdp_ids(self):
 		
@@ -71,6 +121,14 @@ class presupuesto_move_inherit(models.Model):
 				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.ammount, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
+
+
+	@api.multi
+	def button_liberar_presupuesto(self):
+		_logger.info("Entra")
+		_logger.info(self.env.context)
+		pass
+
 
 
 presupuesto_move_inherit()
