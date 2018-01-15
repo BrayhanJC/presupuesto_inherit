@@ -74,7 +74,6 @@ class presupuesto_moverubros_inherit(models.Model):
 		moverel_ids = record.move_id.presupuesto_rel_move
 		year = record.move_id.fiscal_year.id
 		tipo_doc = record.move_id.doc_type
-
 		conditions = [('rubros_id', '=', rubro),
 			('move_id.state', '=', 'confirm'),
 			('move_id.fiscal_year', '=', year)
@@ -83,14 +82,15 @@ class presupuesto_moverubros_inherit(models.Model):
 			conditions.append( ('id', '<', self.id) )
 
 		ids = obj_tc.search(conditions)
-		
+
 		if tipo == "reg" or tipo == "obl" or tipo == "pago":
 			move_saldo = move_val = saldo_rel = 0.0
 			for move in ids:
+				_logger.info(move.move_id.id)
 				for data in moverel_ids:
-					if move.move_id.id == data:
+					if move.move_id.id == data.id:
 						saldo_rel += move.ammount
-					if move.move_id.move_rel.id == data:
+					if move.move_id.presupuesto_rel_move.id == data.id:
 						move_val += move.ammount
 					move_saldo = saldo_rel - move_val
 				self.saldo_move = move_saldo
