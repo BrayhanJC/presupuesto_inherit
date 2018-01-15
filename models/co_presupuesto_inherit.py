@@ -80,9 +80,9 @@ class presupuesto_move_inherit(models.Model):
 				self.hide_button_confirm = True
 			else:
 				self.hide_button_confirm = False
+		else:
 
-			_logger.info(self.hide_button_confirm)
-			_logger.info(diff)
+			self.hide_button_confirm = True
 
 
 
@@ -108,6 +108,31 @@ class presupuesto_move_inherit(models.Model):
 
 
 
+	""" 
+		boton que nos sirve para liberar el presupuesto es usado en la vista
+		de cdp, compromiso y obligacion
+
+	"""			
+	@api.multi
+	def button_liberar_presupuesto(self):
+		_logger.info("Entra")
+		_logger.info(self.env.context)
+
+		doc_type = self.env.context.get('search_default_doc_type')
+
+		if doc_type == 'cdp':
+			_logger.info(doc_type)
+			pass
+		elif doc_type == 'reg':
+			_logger.info(doc_type)
+			pass
+		elif doc_type == 'obl':
+			_logger.info(doc_type)
+			pass
+
+
+
+
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_cdp_ids(self):
 		
@@ -122,12 +147,6 @@ class presupuesto_move_inherit(models.Model):
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 
-
-	@api.multi
-	def button_liberar_presupuesto(self):
-		_logger.info("Entra")
-		_logger.info(self.env.context)
-		pass
 
 
 
