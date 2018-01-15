@@ -2,8 +2,6 @@
 <openerp>
     <data>
 
-
-
         <!-- Extending presupuesto compromiso Form View -->
         <record id="view_presupuesto_move_cdp_inherit_form" model="ir.ui.view">
            <field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_form"/>
@@ -19,15 +17,6 @@
 
             </field>
         </record>
-
-
-
-
-
-
-
-
-
 
         <!-- Extending presupuesto compromiso Form View -->
         <record id="view_presupuesto_move_compromiso_inherit_form" model="ir.ui.view">
@@ -139,7 +128,6 @@
         </record>
 
 
-
         <record id="presupuesto_move_cdp_inherit_search_form" model="ir.ui.view">
             <field name="name">presupuesto.move_view_search</field>
             <field name="model">presupuesto.move</field>
@@ -152,6 +140,7 @@
 
             </field>
         </record>
+
 
         <record id="presupuesto_move_com_inherit_search_form" model="ir.ui.view">
             <field name="name">presupuesto.move_view_com_search</field>
@@ -207,15 +196,6 @@
 
             </field>
         </record>
-
-
-
-
-
-
-
-
-
 
     </data>
 </openerp>

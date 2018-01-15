@@ -58,6 +58,11 @@ class presupuesto_move_inherit(models.Model):
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
 	field_compute= fields.Char(compute='_compute_data')
+	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
+
+
+
+
 
 	@api.one
 	def _compute_data(self):
@@ -66,9 +71,6 @@ class presupuesto_move_inherit(models.Model):
 		_logger.info(self.name)
 		_logger.info('final de compute')
 
-	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
-
-
 
 	""" 
 		metodo computado que nos ayuda a cambiar el estado a la variable hide_button_confirm
@@ -76,7 +78,6 @@ class presupuesto_move_inherit(models.Model):
 		la diferencia es <= 0. 
 
 	"""
-
 	@api.one
 	@api.depends('gastos_ids')
 	def _hide_button_confirm(self):
@@ -91,9 +92,6 @@ class presupuesto_move_inherit(models.Model):
 
 			_logger.info(self.hide_button_confirm)
 			_logger.info(diff)
-
-
-
 
 	""" 
 		metodo que nos sirve para saber si en los rubros que tiene el cdp, compromiso
@@ -115,7 +113,6 @@ class presupuesto_move_inherit(models.Model):
 			return saldo_move - ammount
 
 
-
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_cdp_ids(self):
 		
@@ -130,13 +127,10 @@ class presupuesto_move_inherit(models.Model):
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 
-
 	@api.multi
 	def button_liberar_presupuesto(self):
 		_logger.info("Entra")
 		_logger.info(self.env.context)
 		pass
-
-
 
 presupuesto_move_inherit()
