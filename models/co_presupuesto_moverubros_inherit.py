@@ -71,6 +71,7 @@ class presupuesto_moverubros_inherit(models.Model):
 		tipo = record.mov_type
 		rubro = record.rubros_id.id
 		moverel = record.move_id.move_rel.id
+		moverel_ids = record.move_id.presupuesto_rel_move
 		year = record.move_id.fiscal_year.id
 		tipo_doc = record.move_id.doc_type
 
@@ -82,16 +83,17 @@ class presupuesto_moverubros_inherit(models.Model):
 			conditions.append( ('id', '<', self.id) )
 
 		ids = obj_tc.search(conditions)
-
+		
 		if tipo == "reg" or tipo == "obl" or tipo == "pago":
 			move_saldo = move_val = saldo_rel = 0.0
 			for move in ids:
-				if move.move_id.id == moverel:
-					saldo_rel += move.ammount
-				if move.move_id.move_rel.id == moverel:
-					move_val += move.ammount
-				move_saldo = saldo_rel - move_val
-			self.saldo_move = move_saldo
+				for data in moverel_ids:
+					if move.move_id.id == data:
+						saldo_rel += move.ammount
+					if move.move_id.move_rel.id == data:
+						move_val += move.ammount
+					move_saldo = saldo_rel - move_val
+				self.saldo_move = move_saldo
 
 		if tipo == "cdp" or tipo == "rec" or tipo_doc == 'mod':
 			move_saldo = saldo_resta = saldo_suma = 0.0
