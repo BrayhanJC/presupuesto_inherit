@@ -28,6 +28,7 @@ import difflib
 from openerp import models, fields, api, _
 from openerp.osv import fields, osv
 from openerp import models, fields
+from openerp import api
 import re
 import codecs
 from openerp.tools.translate import _
@@ -56,7 +57,14 @@ class presupuesto_move_inherit(models.Model):
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
+	field_compute= fields.Char(compute='_compute_data')
 
+	@api.one
+	def _compute_data(self):
+		_logger.info('Campo cumputado')
+		_logger.info(self)
+		_logger.info(self.name)
+		_logger.info('final de compute')
 
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_cdp_ids(self):
@@ -68,7 +76,7 @@ class presupuesto_move_inherit(models.Model):
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
 			
 			for rubro in cdp_moverubros:
-				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.ammount, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
+				lista_rubros.append((0,0,{'move_id' : self.id , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 

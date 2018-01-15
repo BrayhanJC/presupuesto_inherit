@@ -14,6 +14,7 @@
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp')]" String="CDP"/>
+                    <field name="field_compute" invisible="1"/>
                 </field>
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -45,6 +46,7 @@
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg')]" String="Compromiso"/>
+                    <field name="field_compute" invisible="1"/>
                 </field>    
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -77,6 +79,7 @@
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl')]" String="Obligación"/>
+                    <field name="field_compute" invisible="1"/>
                 </field> 
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
