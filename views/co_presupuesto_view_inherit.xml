@@ -2,11 +2,44 @@
 <openerp>
     <data>
 
+
+
+        <!-- Extending presupuesto compromiso Form View -->
+        <record id="view_presupuesto_move_cdp_inherit_form" model="ir.ui.view">
+           <field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_form"/>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+
+                <xpath expr = '//form[@string="CDP"]/header//button[2]' position='after'>
+                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+
+                    <field name='hide_button_confirm' invisible='1'/>
+
+                </xpath>
+
+            </field>
+        </record>
+
+
+
+
+
+
+
+
+
+
         <!-- Extending presupuesto compromiso Form View -->
         <record id="view_presupuesto_move_compromiso_inherit_form" model="ir.ui.view">
            <field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_form"/>
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
+
+                <xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
+                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+                    <field name='hide_button_confirm' invisible='1'/>
+                </xpath>
+
 
                 <xpath expr="//field[@name='move_rel']" position="attributes">
                     <attribute name="invisible">1</attribute>
@@ -39,6 +72,12 @@
            <field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_form"/>
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
+
+                <xpath expr = '//form[@string="Obligación"]/header//button[2]' position='after'>
+                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+                    <field name='hide_button_confirm' invisible='1'/>
+                </xpath>
+
 
                 <xpath expr="//field[@name='move_rel']" position="attributes">
                     <attribute name="invisible">1</attribute>
