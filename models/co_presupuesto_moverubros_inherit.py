@@ -90,9 +90,6 @@ class presupuesto_moverubros_inherit(models.Model):
 				for data in moverel_ids:
 					if move.move_id.id == data.id:
 						saldo_rel += move.ammount
-					if move.move_id.presupuesto_rel_move.id == data.id:
-						move_val += move.ammount
-					move_saldo = saldo_rel - move_val
 				self.saldo_move = move_saldo
 
 		if tipo == "cdp" or tipo == "rec" or tipo_doc == 'mod':
