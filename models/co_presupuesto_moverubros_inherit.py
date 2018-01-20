@@ -62,10 +62,10 @@ class presupuesto_moverubros_inherit(models.Model):
 
 
 	@api.one
-	@api.depends('ammount', 'saldo_move')
-	def _saldo_move(self):
+	def _saldo_movee(self):
 		res = {}
 		move_saldo = 0
+		valores=[]
 		obj_tc = self.env['presupuesto.moverubros']
 		record = self
 		tipo = record.mov_type
@@ -82,14 +82,39 @@ class presupuesto_moverubros_inherit(models.Model):
 			conditions.append( ('id', '<', self.id) )
 
 		ids = obj_tc.search(conditions)
-
+		_logger.info('Condicion ids')
+		_logger.info(ids)
+		move_saldo = move_val = saldo_rel = 0.0
 		if tipo == "reg" or tipo == "obl" or tipo == "pago":
-			move_saldo = move_val = saldo_rel = 0.0
-			for move in ids:
-				_logger.info(move.move_id.id)
-				for data in moverel_ids:
+			
+			_logger.info('Entrando en el metodo')
+			
+			for data in moverel_ids:
+				for move in ids:
+					_logger.info(move.move_id.id)
+					_logger.info(moverel)
+					_logger.info(move.move_id.move_rel.id)
 					if move.move_id.id == data.id:
 						saldo_rel += move.ammount
+						_logger.info('primerodfdfd')
+						_logger.info(move.ammount)
+					if move.move_id.move_rel.id == data.id:
+						_logger.info('segundo')
+						_logger.info(move.ammount)
+						move_val += move.ammount
+						
+					move_saldo = saldo_rel - move_val
+					valores.append(move_saldo)
+					_logger.info('calculando move saldo')
+					_logger.info(move_saldo)
+					_logger.info('valores')
+					coso=[]
+					for x in valores:
+						_logger.info(x)
+						if x > 0:
+							coso.append(x)
+					_logger.info('------------------------------------')
+					move_saldo=coso[0]
 				self.saldo_move = move_saldo
 
 		if tipo == "cdp" or tipo == "rec" or tipo_doc == 'mod':
@@ -104,6 +129,8 @@ class presupuesto_moverubros_inherit(models.Model):
 		else:
 			self.saldo_move = move_saldo
 		self.saldo_move = move_saldo
+
+
 
 		return move_saldo
 

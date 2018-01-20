@@ -48,6 +48,7 @@ class presupuesto_move_inherit(models.Model):
 						relation='presupuesto_cdp_compromiso',
 						column1='cdp_ids',
 						column2='compromiso_ids', states={'confirm': [('readonly', True)]})
+
 	doc_type = fields.Selection([
 								('ini', 'Inicial'),
 								('mod', 'Modificacón'),
@@ -57,20 +58,10 @@ class presupuesto_move_inherit(models.Model):
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
-	field_compute= fields.Char(compute='_compute_data')
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
+	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
 
-
-
-
-
-	@api.one
-	def _compute_data(self):
-		_logger.info('Campo cumputado')
-		_logger.info(self)
-		_logger.info(self.name)
-		_logger.info('final de compute')
-
+    
 
 	""" 
 		metodo computado que nos ayuda a cambiar el estado a la variable hide_button_confirm

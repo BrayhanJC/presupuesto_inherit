@@ -36,17 +36,16 @@
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp')]" String="CDP"/>
-                    <field name="field_compute" invisible="1"/>
                 </field>
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">
 						<tree string="Rubros" editable="bottom" create='false'>
-							<field name="move_id" invisible="1" />
+							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
 							<field name="mov_type" />
 							<field name="saldo_move"/>
-							<field name="ammount"/>
+							<field name="ammount" required="False"/>
 							<field name="notas"/>
                             <field name="presupuesto_move_name"/>
 						</tree>
@@ -74,17 +73,16 @@
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg')]" String="Compromiso"/>
-                    <field name="field_compute" invisible="1"/>
                 </field>    
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">
 						<tree string="Rubros" editable="bottom" create='false'>
-							<field name="move_id" invisible="1" />
+							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
 							<field name="mov_type" />
 							<field name="saldo_move"/>
-							<field name="ammount"/>
+							<field name="ammount" required="False"/>
 							<field name="notas"/>
                             <field name="presupuesto_move_name"/>
 						</tree>
@@ -107,17 +105,16 @@
 
                 <field name="move_rel" position="after" >
                     <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl')]" String="Obligación"/>
-                    <field name="field_compute" invisible="1"/>
                 </field> 
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">
 						<tree string="Rubros" editable="bottom" create='false'>
-							<field name="move_id" invisible="1" />
+							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
 							<field name="mov_type" />
 							<field name="saldo_move"/>
-							<field name="ammount"/>
+							<field name="ammount" required="False"/>
 							<field name="notas"/>
                             <field name="presupuesto_move_name"/>
 						</tree>

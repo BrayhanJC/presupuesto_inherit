@@ -37,6 +37,7 @@
     ],
     'data': [
         'views/co_presupuesto_view_inherit.xml',
+        'views/co_account_invoice_inherit_view.xml'
     ],
     'installable': True,
     'auto_install': False,
