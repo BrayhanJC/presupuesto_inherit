@@ -38,6 +38,8 @@ from openerp.tools import float_compare
 import openerp.addons.decimal_precision as dp
 import time
 from datetime import date, datetime, timedelta
+from openerp.osv.orm import setup_modifiers
+from lxml import etree
 _logger = logging.getLogger(__name__)
 
 class presupuesto_move_inherit(models.Model):
@@ -45,9 +47,10 @@ class presupuesto_move_inherit(models.Model):
 	_order = 'date desc'
 
 	presupuesto_rel_move = fields.Many2many(comodel_name='presupuesto.move',
-						relation='presupuesto_cdp_compromiso',
-						column1='cdp_ids',
-						column2='compromiso_ids', states={'confirm': [('readonly', True)]})
+						relation='presupuesto_origen_destino',
+						column1='origen_ids',
+						column2='destino_ids',
+						states={'confirm': [('readonly', True)]})
 
 	doc_type = fields.Selection([
 								('ini', 'Inicial'),
@@ -61,7 +64,7 @@ class presupuesto_move_inherit(models.Model):
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
 	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
 
-    
+	
 
 	""" 
 		metodo computado que nos ayuda a cambiar el estado a la variable hide_button_confirm
@@ -145,5 +148,7 @@ class presupuesto_move_inherit(models.Model):
 		_logger.info("Entra")
 		_logger.info(self.env.context)
 		pass
+
+
 
 presupuesto_move_inherit()

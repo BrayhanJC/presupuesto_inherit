@@ -35,7 +35,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp')]" String="CDP"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year)]" String="CDP"/>
                 </field>
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -44,7 +44,7 @@
 							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
 							<field name="mov_type" />
-							<field name="saldo_move"/>
+							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
                             <field name="move_rel_id"/>
@@ -72,7 +72,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg')]" String="Compromiso"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year)]" String="Compromiso"/>
                 </field>    
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -81,7 +81,7 @@
 							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
 							<field name="mov_type" />
-							<field name="saldo_move"/>
+							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
                             <field name="move_rel_id"/>
@@ -104,7 +104,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl')]" String="Obligación"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year)]" String="Obligación"/>
                 </field> 
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -113,7 +113,7 @@
 							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
 							<field name="mov_type" />
-							<field name="saldo_move"/>
+							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
                             <field name="move_rel_id"/>
