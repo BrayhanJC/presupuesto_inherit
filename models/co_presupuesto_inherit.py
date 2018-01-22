@@ -127,16 +127,16 @@ class presupuesto_move_inherit(models.Model):
 
 
 	@api.onchange('presupuesto_rel_move')
-	def _onchange_cdp_ids(self):
+	def _onchange_rel_move_ids(self):
 		
 		val_rel_ids= self.presupuesto_rel_move
 		lista_rubros = []
 		for x in val_rel_ids:
 			rpre_moverubros = self.env['presupuesto.moverubros']
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
-			
+
 			for rubro in cdp_moverubros:
-				lista_rubros.append((0,0,{'move_id' : self.id , 'saldo_move': rubro.ammount, 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'presupuesto_move_name':x.name}))
+				lista_rubros.append((0,0,{'move_id' : self.id , 'saldo_move':rubro.ammount , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 

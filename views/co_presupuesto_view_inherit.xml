@@ -47,7 +47,7 @@
 							<field name="saldo_move"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
-                            <field name="presupuesto_move_name"/>
+                            <field name="move_rel_id"/>
 						</tree>
 					</field>
                 </xpath>
@@ -84,7 +84,7 @@
 							<field name="saldo_move"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
-                            <field name="presupuesto_move_name"/>
+                            <field name="move_rel_id"/>
 						</tree>
 					</field>
                 </xpath>
@@ -116,7 +116,7 @@
 							<field name="saldo_move"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
-                            <field name="presupuesto_move_name"/>
+                            <field name="move_rel_id"/>
 						</tree>
 					</field>
                 </xpath>
