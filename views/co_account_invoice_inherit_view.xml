@@ -16,6 +16,17 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
+                <xpath expr="//field[@name='obl']" position="attributes">
+                   
+                    <field name="obl" domain="[('move_rel', '=', rp)]" attrs="{'invisible': [('rp','=', True)]}"/>
+      
+                </xpath>
+
+                <xpath expr="//button[@name='generate_obl']" position="after">
+                    <button name="generate_obligacion" type="object" string="Crear OBL" class="oe_highlight" attrs="{'invisible': [('rp_move_rel', '=', [(6, False, [])])]}"/>
+                </xpath>
+
+
             </field>
         </record>
 

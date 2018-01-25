@@ -29,7 +29,7 @@
     'description': """
     Create a module for managing the budget in public entities
     """,
-    'author': 'Brayhan Jaramillo / Juan Zuluaga',
+    'author': 'Brayhan Jaramillo / Camilo Zuluaga',
     'website': 'http://www.openerp.com/',
     'license': 'AGPL-3',
     'depends': [
@@ -37,7 +37,8 @@
     ],
     'data': [
         'views/co_presupuesto_view_inherit.xml',
-        'views/co_account_invoice_inherit_view.xml'
+        'views/co_account_invoice_inherit_view.xml',
+        'views/co_account_voucher_inherit_view.xml'
     ],
     'installable': True,
     'auto_install': False,

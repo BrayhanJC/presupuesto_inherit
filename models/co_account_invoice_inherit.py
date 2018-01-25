@@ -45,7 +45,8 @@ class presupuesto_account_invoice_inherit(models.Model):
 	_description = 'Account'
 
 	rp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'reg')], states={'confirm': [('readonly', True)]})
-
+	obl = fields.Many2one('presupuesto.move', string=u'OBL', domain=[('doc_type', '=' , 'obl'), ('state','=','confirm')])
+    
 	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
@@ -53,13 +54,13 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 		move_arreglos=[]
 		for x in invoice.rp_move_rel:
+			_logger.info(x.fiscal_year.id)
 			move_arreglos.append(x.id)
 
 		presupuesto_move = {
 			'date': invoice.date_invoice,
 			'doc_type': "obl",
 			'partner_id': self.pool.get('res.partner')._find_accounting_partner(invoice.partner_id).id,
-			'move_rel': invoice.rp.id,
 			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 			'invoice_id': invoice.id,
 			'description': invoice.comment,
@@ -71,12 +72,13 @@ class presupuesto_account_invoice_inherit(models.Model):
 		period = search_periods[0]
 		presupuesto_move['period_id'] = period
 
-		presupuesto_move['fiscal_year'] = invoice.rp.fiscal_year.id
+		presupuesto_move['fiscal_year'] = invoice.rp_move_rel.fiscal_year.id
 
 		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
 
 		gastos_ids = []
 		for rubros in rubros_ids:
+			_logger.info(rubros)
 			presupuesto_move_line = {
 				'move_id': presupuesto_move_id,
 				'rubros_id': rubros.rubros_id.id,
@@ -85,6 +87,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				'mov_type': 'obl',
 				'saldo_move': 0,
 				'ammount': invoice.amount_untaxed,
+				'move_rel_id':rubros.move_rel_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 			gastos_ids.append(rubros.id)
@@ -98,7 +101,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 
 
-	def generate_obl(self, cr, uid, ids, context={}):
+	def generate_obligacion(self, cr, uid, ids, context={}):
 
 		invoice = self.browse(cr, uid, ids, context=context)[0]
 
@@ -126,4 +129,35 @@ class presupuesto_account_invoice_inherit(models.Model):
 			'target': 'new',
 		}
 
+	def invoice_pay_customer(self, cr, uid, ids, context=None):
+		if not ids: return []
+		dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'presupuesto', 'presupuesto_payment_voucher_form')
+
+		inv = self.browse(cr, uid, ids[0], context=context)
+		return {
+			'name':_("Pay Invoice"),
+			'view_mode': 'form',
+			'view_id': view_id,
+			'view_type': 'form',
+			'res_model': 'account.voucher',
+			'type': 'ir.actions.act_window',
+			'nodestroy': True,
+			'target': 'new',
+			'domain': '[]',
+			'context': {
+				'payment_expected_currency': inv.currency_id.id,
+				'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
+				'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
+				'default_reference': inv.name,
+				'default_obl': inv.obl.id,
+				'default_obl_move_rel': [(6, 0,[inv.obl.id])],
+				'default_narration': inv.comment,
+				'close_after_process': True,
+				'invoice_type': inv.type,
+				'invoice_id': inv.id,
+				'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+				'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+
+			}
+		}
 presupuesto_account_invoice_inherit()

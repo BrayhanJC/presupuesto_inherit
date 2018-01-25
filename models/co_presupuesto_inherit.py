@@ -63,6 +63,7 @@ class presupuesto_move_inherit(models.Model):
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
 	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
+	obl_move_rel_id = fields.Many2one('account.voucher', string=u'Documento', ondelete='cascade')
 
 	
 
