@@ -17,15 +17,12 @@
                 </xpath>
 
                 <xpath expr="//field[@name='obl']" position="attributes">
-                   
-                    <field name="obl" domain="[('move_rel', '=', rp)]" attrs="{'invisible': [('rp','=', True)]}"/>
-      
+                   <attribute name="attrs">{'invisible': ['|', ('rp','=', False), ('rp_move_rel', '=', False), ('rp_move_rel','=', [(6, False, [])])]}</attribute>
                 </xpath>
 
-                <xpath expr="//button[@name='generate_obl']" position="after">
-                    <button name="generate_obligacion" type="object" string="Crear OBL" class="oe_highlight" attrs="{'invisible': [('rp_move_rel', '=', [(6, False, [])])]}"/>
+                <xpath expr="//button[@name='generate_obl']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|', ('rp','=', False), ('obl','!=', False), ('rp_move_rel','=', [(6, False, [])])]}</attribute>
                 </xpath>
-
 
             </field>
         </record>

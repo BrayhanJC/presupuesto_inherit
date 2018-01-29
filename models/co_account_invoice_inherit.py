@@ -45,8 +45,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 	_description = 'Account'
 
 	rp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'reg')], states={'confirm': [('readonly', True)]})
-	obl = fields.Many2one('presupuesto.move', string=u'OBL', domain=[('doc_type', '=' , 'obl'), ('state','=','confirm')])
-    
+
 	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
