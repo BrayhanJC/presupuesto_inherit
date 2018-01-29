@@ -63,7 +63,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 			reference = voucher.reference
 			documento = voucher.id
 			rubro_id = False
-			obl_id = False
+			obl_id = []
 			rec = voucher.rec.id
 
 			if (voucher.type == 'sale' or voucher.type == 'receipt'):
@@ -120,10 +120,12 @@ class presupuesto_account_voucher_inherit(models.Model):
 				narration = voucher.narration
 				rubros_ids = []
 				pago = voucher.pago.id
+				
 
 				if voucher.rec_aut and not pago:
-					if voucher.obl:
-						obl_id = voucher.obl.id
+					if voucher.obl_move_rel:
+						for x in voucher.obl_move_rel:
+							obl_id.append(x.id)
 					else:
 						raise osv.except_osv(_('¡Advertencia!'),_("Por favor seleccione una obligación presupuestal o desmarque la casilla Presupuesto Automático"))
 
@@ -148,8 +150,9 @@ class presupuesto_account_voucher_inherit(models.Model):
 
 					presupuesto_move['fiscal_year'] = year
 
-					for line in voucher.obl.gastos_ids:
-						if line: rubros_ids.append(line)
+					for x in voucher.obl_move_rel:
+						for line in x.gastos_ids:
+							if line: rubros_ids.append(line)
 
 					pago_id = presupuesto_move_pool.create(cr, uid, presupuesto_move, context=context)
 					for rubros in rubros_ids:
@@ -167,13 +170,18 @@ class presupuesto_account_voucher_inherit(models.Model):
 					presupuesto_move.update({'gastos_ids': gastos_ids})
 					self.write(cr, uid, [voucher.id], {'pago':pago_id}, context=context)
 
-		return super(account_voucher, self).action_move_line_create(cr, uid, ids, context=context)
+		return super(presupuesto_account_voucher_inherit, self).action_move_line_create(cr, uid, ids, context=context)
 
 	def create_pago(self, cr, uid, voucher, rubros_ids, context={}):
 
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
-		obl_id = voucher.obl.id
+		obl_id = []
+
+		if voucher.obl_move_rel:
+			for x in voucher.obl_move_rel:
+				obl_id.append(x.id)
+
 		pago = voucher.pago.id
 
 		presupuesto_move = {
@@ -210,5 +218,38 @@ class presupuesto_account_voucher_inherit(models.Model):
 		self.pool.get('account.voucher').write(cr, uid, [voucher.id], voucher_pago, context=context)
 
 		return presupuesto_move_id
+
+
+	def generate_pago(self, cr, uid, ids, context={}):
+
+		voucher = self.browse(cr, uid, ids, context=context)[0]
+
+		rubros_ids = []
+
+		if voucher.obl_move_rel == False:
+			raise osv.except_osv(_('¡Advertencia!'),_("Por favor seleccione una obligación presupuestal"))
+		else:
+
+			for x in voucher.obl_move_rel:
+				for line in x.gastos_ids:
+					if line: rubros_ids.append(line)
+
+			pago = self.create_pago(cr, uid, voucher, rubros_ids, context=context)
+			data_obj = self.pool.get('ir.model.data')
+			result = data_obj._get_id(cr, uid, 'presupuesto', 'view_presupuesto_pago_move_form')
+			view_id = data_obj.browse(cr, uid, result).res_id
+
+			return {
+				'domain': "[('id','=', " + str(pago) + ")]",
+				'view_type': 'form',
+				'view_mode': 'form',
+				'res_model': 'presupuesto.move',
+				'context': context,
+				'res_id': pago,
+				'view_id': [view_id],
+				'type': 'ir.actions.act_window',
+				'nodestroy': True,
+				'target': 'new',
+			}
 	
 presupuesto_account_voucher_inherit()
