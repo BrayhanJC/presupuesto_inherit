@@ -77,6 +77,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 		gastos_ids = []
 		for rubros in rubros_ids:
+			_logger.info('dfgggggggggggggggggggggggggggggggggggggggggggggggggg')
 			_logger.info(rubros)
 			presupuesto_move_line = {
 				'move_id': presupuesto_move_id,
@@ -86,7 +87,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				'mov_type': 'obl',
 				'saldo_move': 0,
 				'ammount': invoice.amount_untaxed,
-				'move_rel_id':rubros.move_rel_id.id
+				'move_rel_id':rubros.move_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 			gastos_ids.append(rubros.id)
@@ -100,7 +101,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 
 
-	def generate_obligacion(self, cr, uid, ids, context={}):
+	def generate_obl(self, cr, uid, ids, context={}):
 
 		invoice = self.browse(cr, uid, ids, context=context)[0]
 
