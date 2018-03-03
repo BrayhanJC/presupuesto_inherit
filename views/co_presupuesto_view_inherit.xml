@@ -9,10 +9,8 @@
             <field name="arch" type="xml">
 
                 <xpath expr = '//form[@string="CDP"]/header//button[2]' position='after'>
-                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
-
                     <field name='hide_button_confirm' invisible='1'/>
-
+                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
                 </xpath>
 
             </field>
@@ -25,8 +23,8 @@
             <field name="arch" type="xml">
 
                 <xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
-                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
                     <field name='hide_button_confirm' invisible='1'/>
+                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
                 </xpath>
 
 
@@ -62,8 +60,8 @@
             <field name="arch" type="xml">
 
                 <xpath expr = '//form[@string="Obligación"]/header//button[2]' position='after'>
-                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
                     <field name='hide_button_confirm' invisible='1'/>
+                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
                 </xpath>
 
 
@@ -112,7 +110,7 @@
 						<tree string="Rubros" editable="bottom" create='false'>
 							<field name="move_id" invisible="1"/>
 							<field name="rubros_id" domain="[('rubro_nivel', '=', 'D'), ('rubro_tipo', '=', 'G')]"/>
-							<field name="mov_type" />
+							<field name="mov_type"/>
 							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Orden de pago presupuestal -->
+        <record id="view_presupuesto_liberacion_form" model="ir.ui.view">
+            <field name="name">Liberacion Presupuesto</field>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+                <form >
+                    <header>
+                        <button name="button_liberar_presupuesto_liberacion" string="Liberar presupuesto" type="object" class="oe_highlight"/>
+                    </header>
+                    <field name='id' invisible='1'/>
+                    <field name='llenar_campo_gastaos_liberaciones' invisible='1'/>
+                    <field name='state' invisible='1'/>
+
+                    <field name='gastos_liberacion_ids'  attrs="{'readonly': [('state','=','draft')]}" >
+                        <tree editable="botton">
+                            <field name='move_id' invisible='1'/>
+                            <field name='mov_type' invisible='1'/>
+                            <field name='rubros_id' />
+                            <field name='saldo_move_'/>
+                            <field name='ammount'/>
+                            <field name='move_rel_id' readonly='1'/>
+                        </tree>
+
+                    </field>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

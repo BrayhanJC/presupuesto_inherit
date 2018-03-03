@@ -61,10 +61,22 @@ class presupuesto_move_inherit(models.Model):
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
-	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm')	
+	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
 	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
 	obl_move_rel_id = fields.Many2one('account.voucher', string=u'Documento', ondelete='cascade')
 
+
+
+
+	@api.one
+	@api.onchange('gastos_ids')
+	def hide_button_change(self):
+		if self.gastos_ids:
+			diff = self._get_diff_money(self.gastos_ids)
+			if diff <= 0:
+				self.hide_button_confirm = True
+			else:
+				self.hide_button_confirm = False
 	
 
 	""" 
@@ -74,19 +86,13 @@ class presupuesto_move_inherit(models.Model):
 
 	"""
 	@api.one
-	@api.depends('gastos_ids')
 	def _hide_button_confirm(self):
-
 		if self.gastos_ids:
 			diff = self._get_diff_money(self.gastos_ids)
-
 			if diff <= 0:
 				self.hide_button_confirm = True
 			else:
 				self.hide_button_confirm = False
-		else:
-
-			self.hide_button_confirm = True
 
 	""" 
 		metodo que nos sirve para saber si en los rubros que tiene el cdp, compromiso
@@ -112,22 +118,6 @@ class presupuesto_move_inherit(models.Model):
 		de cdp, compromiso y obligacion
 
 	"""			
-	@api.multi
-	def button_liberar_presupuesto(self):
-		_logger.info("Entra")
-		_logger.info(self.env.context)
-
-		doc_type = self.env.context.get('search_default_doc_type')
-
-		if doc_type == 'cdp':
-			_logger.info(doc_type)
-			pass
-		elif doc_type == 'reg':
-			_logger.info(doc_type)
-			pass
-		elif doc_type == 'obl':
-			_logger.info(doc_type)
-			pass
 
 
 	@api.onchange('presupuesto_rel_move')
@@ -143,12 +133,6 @@ class presupuesto_move_inherit(models.Model):
 				lista_rubros.append((0,0,{'move_id' : self.id , 'saldo_move':rubro.ammount , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
-
-	@api.multi
-	def button_liberar_presupuesto(self):
-		_logger.info("Entra")
-		_logger.info(self.env.context)
-		pass
 
 
 

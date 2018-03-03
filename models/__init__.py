@@ -27,3 +27,4 @@ import co_presupuesto_inherit
 import co_presupuesto_moverubros_inherit
 import co_account_invoice_inherit
 import co_account_voucher_inherit
+import co_presupuesto_liberacion_move
