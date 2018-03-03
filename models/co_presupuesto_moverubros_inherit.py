@@ -43,7 +43,65 @@ _logger = logging.getLogger(__name__)
 class presupuesto_moverubros_inherit(models.Model):
 	_inherit = 'presupuesto.moverubros'
 
+
+
+	@api.one
+	@api.constrains('ammount')
+	def _check_saldo(self):
+
+		saldo_move = self._saldo_move()[ 0 ] if self.mov_type not in ['lobl', 'lreg', 'lcdp'] else self.saldo_move_
+
+
+		_logger.info(saldo_move)
+
+		if self.mov_type == 'ini' or self.mov_type == 'rec' or self.mov_type == 'adi' or self.mov_type == 'cre':
+			return True
+		elif self.ammount > saldo_move:
+			raise Warning(_('El valor del movimiento no puede ser superior al saldo. asasaskaj'))
+		return True
+
+
+
+
+
+	@api.one
+	@api.constrains('mov_type')
+	def _check_mov_type(self):
+		record = self
+		if record.move_id.doc_type == 'ini':
+			if not (record.mov_type == 'ini'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		elif record.move_id.doc_type == 'mod':
+			if not (record.mov_type == 'adi' or record.mov_type =='red' or record.mov_type =='cre' or record.mov_type =='cont'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		elif record.move_id.doc_type == 'rec':
+			if not (record.mov_type == 'rec'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		elif record.move_id.doc_type == 'cdp':
+			if not (record.mov_type == 'cdp') and (record.mov_type <> 'lcdp'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		elif record.move_id.doc_type == 'reg':
+			if not (record.mov_type == 'reg') and (record.mov_type <> 'lreg'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		elif record.move_id.doc_type == 'obl':
+			if not (record.mov_type == 'obl') and (record.mov_type <> 'lobl'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		elif record.move_id.doc_type == 'pago':
+			if not (record.mov_type == 'pago'):
+				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
+		
+
+
+
+
+
+
+
+
+
 	move_rel_id= fields.Many2one('presupuesto.move', string=u'Documento', size=25)
+	saldo_move_ = fields.Float(string='Saldo')
+	ammount = fields.Float(string=u'Valor', required=True, default=0)
 	mov_type = fields.Selection([
 								('ini', 'Inicial'),
 								('adi', 'Adición'),
