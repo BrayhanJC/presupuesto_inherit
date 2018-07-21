@@ -33,7 +33,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year)]" String="CDP"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0)]" String="CDP"/>
                 </field>
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -70,7 +70,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year)]" String="Compromiso"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0)]" String="Compromiso"/>
                 </field>    
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -102,7 +102,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year)]" String="Obligación"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0)]" String="Obligación"/>
                 </field> 
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
