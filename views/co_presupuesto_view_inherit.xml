@@ -22,6 +22,11 @@
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
 
+
+                <field name="partner_id" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field> 
+
                 <xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
                     <field name='hide_button_confirm' invisible='1'/>
                     <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
@@ -59,6 +64,12 @@
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
 
+
+                <field name="partner_id" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field> 
+
+
                 <xpath expr = '//form[@string="Obligación"]/header//button[2]' position='after'>
                     <field name='hide_button_confirm' invisible='1'/>
                     <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
@@ -70,7 +81,7 @@
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0)]" String="Compromiso"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0), ('partner_id', '=', partner_id)]" String="Compromiso"/>
                 </field>    
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -97,13 +108,23 @@
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
 
+
+
+                <field name="partner_id" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field> 
+
+
                 <xpath expr="//field[@name='move_rel']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
 
                 <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0)]" String="Obligación"/>
+                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('amount_total', '!=', 0), ('partner_id', '=', partner_id)]" String="Obligación"/>
                 </field> 
+
+
+
 
                 <xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">

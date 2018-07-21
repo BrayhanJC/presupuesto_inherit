@@ -128,9 +128,12 @@ class presupuesto_move_inherit(models.Model):
 		for x in val_rel_ids:
 			rpre_moverubros = self.env['presupuesto.moverubros']
 			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
-
+			_logger.info(cdp_moverubros)
 			for rubro in cdp_moverubros:
-				lista_rubros.append((0,0,{'move_id' : self.id , 'ammount': 0 , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
+
+				if rubro.saldo_move > 0:
+
+					lista_rubros.append((0,0,{'move_id' : self.id , 'ammount': 0 , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
 		#cargando gastos
 		self.gastos_ids = lista_rubros
 
