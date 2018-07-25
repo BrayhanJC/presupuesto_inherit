@@ -48,18 +48,12 @@ class presupuesto_liberacion_rel(models.Model):
 	_inherit = 'presupuesto.move'
 
 
-
-
-
-
-
-
 	id = fields.Integer('id')
 	llenar_campo_gastaos_liberaciones = fields.Boolean(compute='_compute_liberaciones', string = "Liberaciones")
 
 
 	gastos_ids = fields.One2many('presupuesto.moverubros', 'move_id', string=u'Rubros', states={'confirm': [('readonly', True)]},
-									domain=[('rubros_id.rubro_tipo', '=', 'G'), ('mov_type', 'in', ['obl', 'cdp', 'reg'])])
+									domain=[('rubros_id.rubro_tipo', '=', 'G'), ('mov_type', 'in', ['obl', 'cdp', 'reg', 'pago'])])
 		
 
 	gastos_liberacion_ids = fields.One2many('presupuesto.moverubros', 'move_id', string=u'Rubros', states={'confirm': [('readonly', True)]},

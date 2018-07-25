@@ -46,6 +46,13 @@ class presupuesto_move_inherit(models.Model):
 	_inherit = 'presupuesto.move'
 	_order = 'date desc'
 
+
+
+
+
+
+
+
 	presupuesto_rel_move = fields.Many2many(comodel_name='presupuesto.move',
 						relation='presupuesto_origen_destino',
 						column1='origen_ids',
@@ -135,7 +142,12 @@ class presupuesto_move_inherit(models.Model):
 
 					lista_rubros.append((0,0,{'move_id' : self.id , 'ammount': 0 , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
 		#cargando gastos
+		_logger.info(lista_rubros)
 		self.gastos_ids = lista_rubros
+
+
+
+
 
 
 
