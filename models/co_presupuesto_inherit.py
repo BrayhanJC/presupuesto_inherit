@@ -129,19 +129,14 @@ class presupuesto_move_inherit(models.Model):
 		val_rel_ids= self.presupuesto_rel_move
 		lista_rubros = []
 		for x in val_rel_ids:
-			if x.id in gastos_ids:
-				flag = False
-
-			if flag:
-				cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
-				for rubro in cdp_moverubros:
-					if rubro.ammount > 0:
-						lista_rubros.append((0,0,{'move_id' : self.id , 'ammount': 0 , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
+			cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
+			for rubro in cdp_moverubros:
+				if rubro.ammount > 0:
+					lista_rubros.append((0,0,{'move_id' : self.id , 'ammount': 0 , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
 
 
-			flag = True
 
-		self.gastos_ids = lista_rubros
+	self.gastos_ids = lista_rubros
 
 
 
