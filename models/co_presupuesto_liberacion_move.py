@@ -53,7 +53,7 @@ class presupuesto_liberacion_rel(models.Model):
 
 
 	gastos_ids = fields.One2many('presupuesto.moverubros', 'move_id', string=u'Rubros', states={'confirm': [('readonly', True)]},
-									domain=[('rubros_id.rubro_tipo', '=', 'G'), ('mov_type', 'in', ['obl', 'cdp', 'reg', 'pago'])])
+									domain=[('rubros_id.rubro_tipo', '=', 'G'), ('mov_type', 'in', ['obl', 'cdp', 'reg', 'pago', 'lib', 'ini', 'mod', 'rec'])])
 		
 
 	gastos_liberacion_ids = fields.One2many('presupuesto.moverubros', 'move_id', string=u'Rubros', states={'confirm': [('readonly', True)]},

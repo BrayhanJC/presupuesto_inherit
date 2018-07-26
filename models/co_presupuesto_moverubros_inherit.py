@@ -45,6 +45,12 @@ class presupuesto_moverubros_inherit(models.Model):
 
 
 
+	@api.multi
+	def unlink(self):
+		res = super(presupuesto_moverubros_inherit, self).unlink()
+		_logger.info(res)
+		return res
+
 	@api.one
 	@api.constrains('ammount')
 	def _check_saldo(self):
@@ -169,8 +175,6 @@ class presupuesto_moverubros_inherit(models.Model):
 			self.saldo_move = move_saldo
 		self.saldo_move = move_saldo
 
-		_logger.info("##########")
-		_logger.info(move_saldo)
 		return move_saldo
 
 
