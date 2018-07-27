@@ -136,7 +136,7 @@ class presupuesto_move_inherit(models.Model):
 
 
 
-	self.gastos_ids = lista_rubros
+		self.gastos_ids = lista_rubros
 
 
 
