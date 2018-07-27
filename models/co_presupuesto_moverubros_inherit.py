@@ -63,7 +63,7 @@ class presupuesto_moverubros_inherit(models.Model):
 		if self.mov_type == 'ini' or self.mov_type == 'rec' or self.mov_type == 'adi' or self.mov_type == 'cre':
 			return True
 		elif self.ammount > saldo_move:
-			raise Warning(_('El valor del movimiento no puede ser superior al saldo. asasaskaj'))
+			raise Warning(_('El valor del movimiento no puede ser superior al saldo.'))
 		return True
 
 
