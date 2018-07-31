@@ -48,12 +48,15 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
+
+		if not invoice.comment:
+			raise Warning(_('El campo información adicional no debe estar vacío'))
+
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 
 		move_arreglos=[]
 		for x in invoice.rp_move_rel:
-			_logger.info(x.fiscal_year.id)
 			move_arreglos.append(x.id)
 
 		presupuesto_move = {
@@ -68,17 +71,21 @@ class presupuesto_account_invoice_inherit(models.Model):
 		period_pool = self.pool.get('account.period')
 		ctx = dict(context or {}, account_period_prefer_normal=True)
 		search_periods = period_pool.find(cr, uid, invoice.date_invoice, context=ctx)
+
 		period = search_periods[0]
 		presupuesto_move['period_id'] = period
+		
+		fiscal_year_id = period_pool.browse(cr, uid, period, context=ctx)
 
-		presupuesto_move['fiscal_year'] = invoice.rp_move_rel.fiscal_year.id
+
+		presupuesto_move['fiscal_year'] = fiscal_year_id.fiscalyear_id.id
 
 		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
 
+
+
 		gastos_ids = []
 		for rubros in rubros_ids:
-			_logger.info('dfgggggggggggggggggggggggggggggggggggggggggggggggggg')
-			_logger.info(rubros)
 			presupuesto_move_line = {
 				'move_id': presupuesto_move_id,
 				'rubros_id': rubros.rubros_id.id,
