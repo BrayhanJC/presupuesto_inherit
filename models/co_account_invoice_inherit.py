@@ -51,7 +51,6 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
-
 		if not invoice.comment:
 			raise Warning(_('El campo información adicional no debe estar vacío'))
 
@@ -89,6 +88,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 
 
+
 		gastos_ids = []
 		for rubros in rubros_ids:
 			presupuesto_move_line = {
@@ -98,7 +98,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				'date': invoice.date_invoice,
 				'mov_type': 'obl',
 				'saldo_move': 0,
-				'ammount': 0 if len(self.rp_move_rel) > 1 else invoice.amount_untaxed,
+				'ammount': 0 if len(invoice.rp_move_rel) > 1 else invoice.amount_untaxed,
 				'move_rel_id':rubros.move_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
