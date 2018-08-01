@@ -96,15 +96,6 @@ class presupuesto_moverubros_inherit(models.Model):
 			if not (record.mov_type == 'pago'):
 				raise ValueError("¡Error! Verifique que el campo Tipo, enseguida de Rubros, corresponda a la operación que desea realizar.")
 		
-
-
-
-
-
-
-
-
-
 	move_rel_id= fields.Many2one('presupuesto.move', string=u'Documento', size=25)
 	saldo_move_ = fields.Float(string='Saldo')
 	ammount = fields.Float(string=u'Valor', required=True, default=0)
@@ -176,8 +167,5 @@ class presupuesto_moverubros_inherit(models.Model):
 		self.saldo_move = move_saldo
 
 		return move_saldo
-
-
-
 
 presupuesto_moverubros_inherit()
