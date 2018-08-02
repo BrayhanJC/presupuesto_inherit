@@ -174,6 +174,9 @@ class presupuesto_account_voucher_inherit(models.Model):
 
 	def create_pago(self, cr, uid, voucher, rubros_ids, context={}):
 
+		if not voucher.narration:
+			raise Warning(_('El campo Notas Internas debe estar diligenciado'))
+
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 		obl_id = []
@@ -184,12 +187,19 @@ class presupuesto_account_voucher_inherit(models.Model):
 
 		pago = voucher.pago.id
 
+		move_arreglos=[]
+
+		for x in voucher.obl_move_rel:
+			move_arreglos.append(x.id)
+
+
 		presupuesto_move = {
 			'date': voucher.date,
 			'doc_type': "pago",
 			'partner_id': self.pool.get('res.partner')._find_accounting_partner(voucher.partner_id).id,
 			#'move_rel': obl_id,
-			'move_rel_id':obl_id,
+			#'move_rel_id':obl_id,
+			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 			'voucher_id': voucher.id,
 			'description': voucher.narration,
 			'period_id':voucher.period_id.id,
