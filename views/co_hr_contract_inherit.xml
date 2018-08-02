@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="hr_contract_form__l10n_co_view_for">
+            <field name="name">Contratos</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="type">form</field>
+            <field name="priority" eval="7"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='cdp']" position="after">
+                    <field name="cdp_move_rel" widget="many2many_tags" String="CDP"/>
+                </xpath>
+
+                <xpath expr="//field[@name='cdp']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
