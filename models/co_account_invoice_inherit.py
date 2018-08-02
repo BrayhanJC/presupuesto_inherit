@@ -46,8 +46,10 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 	rp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'reg')], states={'confirm': [('readonly', True)]})
 
-	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
+
+
+	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
 		if not invoice.comment:
 			raise Warning(_('El campo información adicional no debe estar vacío'))
@@ -55,10 +57,12 @@ class presupuesto_account_invoice_inherit(models.Model):
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 
+
 		move_arreglos=[]
 		for x in invoice.rp_move_rel:
 			move_arreglos.append(x.id)
 
+		
 		presupuesto_move = {
 			'date': invoice.date_invoice,
 			'doc_type': "obl",
@@ -68,6 +72,8 @@ class presupuesto_account_invoice_inherit(models.Model):
 			'description': invoice.comment,
 		}
 
+
+
 		period_pool = self.pool.get('account.period')
 		ctx = dict(context or {}, account_period_prefer_normal=True)
 		search_periods = period_pool.find(cr, uid, invoice.date_invoice, context=ctx)
@@ -76,11 +82,10 @@ class presupuesto_account_invoice_inherit(models.Model):
 		presupuesto_move['period_id'] = period
 		
 		fiscal_year_id = period_pool.browse(cr, uid, period, context=ctx)
-
-
 		presupuesto_move['fiscal_year'] = fiscal_year_id.fiscalyear_id.id
 
 		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
+
 
 
 
@@ -93,7 +98,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				'date': invoice.date_invoice,
 				'mov_type': 'obl',
 				'saldo_move': 0,
-				'ammount': invoice.amount_untaxed,
+				'ammount': 0 if len(invoice.rp_move_rel) > 1 else invoice.amount_untaxed,
 				'move_rel_id':rubros.move_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
@@ -119,6 +124,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				if line: rubros_ids.append(line)
 
 		obl = self.create_obl(cr, uid, invoice, rubros_ids, context=context)
+		_logger.info("asas")
 		data_obj = self.pool.get('ir.model.data')
 		result = data_obj._get_id(cr, uid, 'presupuesto', 'view_presupuesto_obligacion_move_form')
 		view_id = data_obj.browse(cr, uid, result).res_id
