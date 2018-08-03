@@ -53,7 +53,7 @@ class hr_contract_inherit(models.Model):
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 
 		move_arreglos=[]
-		for x in invoice.cdp_move_rel:
+		for x in contract.cdp_move_rel:
 			move_arreglos.append(x.id)
 
 		presupuesto_move = {
@@ -77,14 +77,15 @@ class hr_contract_inherit(models.Model):
 		presupuesto_move['fiscal_year'] = fiscal_year_id.fiscalyear_id.id
 
 		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
-
+		_logger.info(len(contract.cdp_move_rel))
+		_logger.info(contract.contract_v_tto)
 		gastos_ids = []
 		for rubros in rubros_ids:
 			presupuesto_move_line = {
 				'move_id': presupuesto_move_id,
 				'rubros_id': rubros.rubros_id.id,
 				'mov_type': 'reg',
-				'ammount': contract.contract_v_tto,
+				'ammount': 0 if len(contract.cdp_move_rel) > 1 else contract.contract_v_tto,
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 			gastos_ids.append(rubros.id)
@@ -137,11 +138,9 @@ class hr_contract_inherit(models.Model):
 
 			if presupuesto_origen_destino_ids:
 				for x in presupuesto_origen_destino_ids:
-
 					destino_ids.append(x.move_id.id)
 
 			if destino_ids:
-				_logger.info(destino_ids)
 				return {'domain': {'rp': [('id', 'in', (destino_ids))]}}
 
 

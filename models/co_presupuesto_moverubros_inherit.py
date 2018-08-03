@@ -57,9 +57,9 @@ class presupuesto_moverubros_inherit(models.Model):
 
 		saldo_move = self._saldo_move()[ 0 ] if self.mov_type not in ['lobl', 'lreg', 'lcdp'] else self.saldo_move_
 
-
+		_logger.info(self.ammount)
 		_logger.info(saldo_move)
-
+		_logger.info(self._saldo_move())
 		if self.mov_type == 'ini' or self.mov_type == 'rec' or self.mov_type == 'adi' or self.mov_type == 'cre':
 			return True
 		elif self.ammount > saldo_move:
@@ -147,7 +147,8 @@ class presupuesto_moverubros_inherit(models.Model):
 				if move.move_rel_id.id == moverel:
 					_logger.info('entro al segundo')
 					move_val += move.ammount
-				move_saldo = saldo_rel - move_val
+
+				move_saldo = (saldo_rel - move_val) if saldo_rel else move_val
 			self.saldo_move = move_saldo
 
 		if tipo == "cdp" or tipo == "rec" or tipo_doc == 'mod':
