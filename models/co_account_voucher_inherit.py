@@ -216,7 +216,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 				'mov_type': 'pago',
 				'period_id': voucher.period_id.id,
 				'date': voucher.date,
-				'ammount': rubros.ammount
+				'ammount': 0 if len(voucher.obl_move_rel) else rubros.ammount
 			}
 
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
