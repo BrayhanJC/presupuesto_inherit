@@ -45,7 +45,7 @@ class hr_contract_inherit(models.Model):
 	_inherit = 'hr.contract'
 	_description = 'Contract'
 
-	cdp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'cdp')], states={'confirm': [('readonly', True)]})
+	cdp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'cdp')])
 
 	def create_reg(self, cr, uid, contract, rubros_ids, context={}):
 
@@ -123,5 +123,28 @@ class hr_contract_inherit(models.Model):
 			'nodestroy': True,
 			'target': 'new',
 		}
+
+	
+	@api.onchange('cdp_move_rel')
+	def domain_rp(self):
+		if self.cdp_move_rel:
+
+			cdp_ids = [x.id for x in self.cdp_move_rel]
+			destino_ids = []
+			obj_presupuesto_origen_destino = self.env['presupuesto.moverubros']
+
+			presupuesto_origen_destino_ids = obj_presupuesto_origen_destino.search([('move_rel_id', 'in', cdp_ids)])
+
+			if presupuesto_origen_destino_ids:
+				for x in presupuesto_origen_destino_ids:
+
+					destino_ids.append(x.move_id.id)
+
+			if destino_ids:
+				_logger.info(destino_ids)
+				return {'domain': {'rp': [('id', 'in', (destino_ids))]}}
+
+
+
 
 hr_contract_inherit()

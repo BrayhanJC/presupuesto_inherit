@@ -2,21 +2,34 @@
 <openerp>
     <data>
 
-        <record model="ir.ui.view" id="hr_contract_form__l10n_co_view_for">
+        <record model="ir.ui.view" id="hr_contract_form__l10n_co_view_form_inherit_presupuesto">
             <field name="name">Contratos</field>
             <field name="model">hr.contract</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="type">form</field>
-            <field name="priority" eval="7"/>
             <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='cdp']" position="after">
-                    <field name="cdp_move_rel" widget="many2many_tags" String="CDP"/>
-                </xpath>
 
-                <xpath expr="//field[@name='cdp']" position="attributes">
+                <field name="cdp" position="after">
+                    <field name="cdp_move_rel" widget="many2many_tags" String="CDP"/>
+                </field>
+
+                <field name="cdp" position="attributes">
                     <attribute name="invisible">1</attribute>
-                </xpath>
+                </field>
+
+                <field name="rp" position="replace">
+                    <field name="rp" attrs="{'invisible': [('cdp_move_rel','=', False)]}"/>
+                </field>
+
+
+                <button name="generate_reg" position="replace">
+                    <button name="generate_reg" type="object" string="Crear RP" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
+                </button>
+
+
+
             </field>
         </record>
     </data>
