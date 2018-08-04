@@ -46,6 +46,7 @@ class hr_contract_inherit(models.Model):
 	_description = 'Contract'
 
 	cdp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'cdp')])
+	modification_move_rel = fields.One2many('contract.modification', 'contract_move_rel_id', 'Modificaciones')
 
 	def create_reg(self, cr, uid, contract, rubros_ids, context={}):
 

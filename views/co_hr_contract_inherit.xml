@@ -1,36 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+	<data>
 
-        <record model="ir.ui.view" id="hr_contract_form__l10n_co_view_form_inherit_presupuesto">
-            <field name="name">Contratos</field>
-            <field name="model">hr.contract</field>
-            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-
-
-                <field name="cdp" position="after">
-                    <field name="cdp_move_rel" widget="many2many_tags" String="CDP"/>
-                </field>
-
-                <field name="cdp" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </field>
-
-                <field name="rp" position="replace">
-                    <field name="rp" attrs="{'invisible': [('cdp_move_rel','=', False)]}"/>
-                </field>
+		<record model="ir.ui.view" id="hr_contract_form__l10n_co_view_form_inherit_presupuesto">
+			<field name="name">Contratos</field>
+			<field name="model">hr.contract</field>
+			<field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
 
 
-                <button name="generate_reg" position="replace">
-                    <button name="generate_reg" type="object" string="Crear RP" class="oe_highlight"
-                            attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
-                </button>
+				<field name="cdp" position="after">
+					<field name="cdp_move_rel" widget="many2many_tags" String="CDP"/>
+				</field>
+
+				<field name="cdp" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</field>
+
+				<field name="rp" position="replace">
+					<field name="rp" attrs="{'invisible': [('cdp_move_rel','=', False)]}"/>
+				</field>
+
+
+				<button name="generate_reg" position="replace">
+					<button name="generate_reg" type="object" string="Crear RP" class="oe_highlight"
+							attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
+				</button>
 
 
 
-            </field>
-        </record>
-    </data>
+				<notebook>
+
+					<page string="Modificaciones">
+
+						<field name="modification_move_rel">
+							<tree editable="bottom" string="Modificaciones">
+								<field name="name"/>
+								<field name="date_begin"/>
+								<field name="description"/>
+								<field name="date_end"/>
+								<field name="additional_value"/>
+								<field name="cdp_move_rel" widget="many2many_tags" string="CDP"/>
+								<field name="rp" string="RP"/>
+								<field name="contract_move_rel_id" invisible="1"/>
+							</tree>
+						</field>
+
+					</page>
+				</notebook>
+
+
+
+			</field>
+		</record>
+	</data>
 </openerp>

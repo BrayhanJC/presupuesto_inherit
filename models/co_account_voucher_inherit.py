@@ -129,6 +129,10 @@ class presupuesto_account_voucher_inherit(models.Model):
 					else:
 						raise osv.except_osv(_('¡Advertencia!'),_("Por favor seleccione una obligación presupuestal o desmarque la casilla Presupuesto Automático"))
 
+					move_arreglos=[]
+
+					for x in voucher.obl_move_rel:
+						move_arreglos.append(x.id)
 					presupuesto_move = {
 						'doc_type': 'pago',
 						'date': date,
@@ -136,6 +140,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 						'description': narration,
 						'voucher_id':documento,
 						#'move_rel': obl_id,
+						'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 						'move_rel_id':obl_id,
 						'state': 'confirm',
 					}

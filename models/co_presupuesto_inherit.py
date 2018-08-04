@@ -66,10 +66,8 @@ class presupuesto_move_inherit(models.Model):
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
 	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
 	obl_move_rel_id = fields.Many2one('account.voucher', string=u'Documento', ondelete='cascade')
-
-
-
-
+	
+	
 	@api.one
 	@api.onchange('gastos_ids')
 	def hide_button_change(self):

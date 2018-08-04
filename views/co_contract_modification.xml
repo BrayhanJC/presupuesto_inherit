@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+        <record id="view_contract_modification_tree" model="ir.ui.view">
+            <field name="name">Contract</field>
+            <field name="model">contract.modification</field>
+            <field name="arch" type="xml">
+                <tree string="Modificaciones">
+                    <field name="name"/>
+                    <field name="date_begin"/>
+                    <field name="description"/>
+                    <field name="date_end"/>
+                    <field name="additional_value"/>
+                    <field name="cdp_move_rel" widget="many2many_tags"/>
+                     <field name="contract_move_rel_id" invisible="1"/>
+            
+                    
+                </tree>
+            </field>
+        </record>
+
+
+
+
+</data>
+</openerp>

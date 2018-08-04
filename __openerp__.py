@@ -33,14 +33,15 @@
     'website': 'http://www.openerp.com/',
     'license': 'AGPL-3',
     'depends': [
-        'presupuesto', 'l10n_co_hr_payroll'
+        'presupuesto',  'l10n_co_hr_payroll'
     ],
     'data': [
         'views/co_presupuesto_liberacion_view.xml',
         'views/co_presupuesto_view_inherit.xml',
         'views/co_account_invoice_inherit_view.xml',
         'views/co_account_voucher_inherit_view.xml',
-        'views/co_hr_contract_inherit.xml'
+        'views/co_hr_contract_inherit.xml',
+        'views/co_contract_modification.xml'
     ],
     'installable': True,
     'auto_install': False,
