@@ -45,17 +45,21 @@ class contract_modification(models.Model):
 	_name = 'contract.modification'
 	_description = 'Contract Modification'
 
-	name= fields.Char('N°')
-	date_begin = fields.Datetime('Fecha', default=fields.Datetime.now)
-	description= fields.Char(u'Descripción')
-	date_end = fields.Datetime(u'Duración Hasta')
-	additional_value = fields.Float('Valor Adicional')
-	cdp_move_rel = fields.Many2many(comodel_name='presupuesto.move',
-						relation='presupuesto_origen_destino',
+	name= fields.Char(string='N°')
+	date_begin = fields.Date(string='Fecha')
+	description= fields.Char(string=u'Descripción')
+	date_end = fields.Date(string=u'Duración Hasta')
+	additional_value = fields.Float(string='Valor Adicional')
+	cdp_move_rel = fields.Many2many(comodel_name='presupuesto.move', string="CDP",
+						relation='presupuesto_origen_destino_contract',
 						column1='origen_ids',
 						column2='destino_ids', 
 						domain=[('doc_type', '=' , 'cdp')])
-	rp = fields.Many2one('presupuesto.move', 'RP', ondelete='restrict', domain=[('doc_type', '=' , 'reg'), ('state','=','confirm')])
+	rp = fields.Many2one('presupuesto.move', string='RP', ondelete='restrict', domain=[('doc_type', '=' , 'reg'), ('state','=','confirm')])
 	contract_move_rel_id = fields.Many2one('hr.contract', string=u'Contract')
 
+
+	@api.multi
+	def button_create_rp(self):
+		_logger.info('hola')
 contract_modification()

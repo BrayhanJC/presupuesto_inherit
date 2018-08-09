@@ -2,26 +2,26 @@
 <openerp>
 <data>
 
-        <record id="view_contract_modification_tree" model="ir.ui.view">
-            <field name="name">Contract</field>
-            <field name="model">contract.modification</field>
-            <field name="arch" type="xml">
-                <tree string="Modificaciones">
-                    <field name="name"/>
-                    <field name="date_begin"/>
-                    <field name="description"/>
-                    <field name="date_end"/>
-                    <field name="additional_value"/>
-                    <field name="cdp_move_rel" widget="many2many_tags"/>
-                     <field name="contract_move_rel_id" invisible="1"/>
-            
-                    
-                </tree>
-            </field>
-        </record>
+	<record id="view_contract_modification_form" model="ir.ui.view">
+		<field name="name">Contract</field>
+		<field name="model">contract.modification</field>
+		<field name="arch" type="xml">
+			<form string="Modificaciones">
+				<group>
+					<field name="name" string="N°"/>
+					<field name="date_begin" string="Fecha"/>
+					<field name="description" string="Descripción"/>
+					<field name="date_end" string="Duración Hasta"/>
+					<field name="additional_value" string="Valor Adicional"/>
+					<field name="cdp_move_rel" widget="many2many_tags" string="CDP"/>
+					<field name="rp" string="RP"/>
+					<button name="button_create_rp" type="action" string="Crear RP" class="oe_highlight" attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
+					<field name="contract_move_rel_id" invisible="1"/>
+				</group>
 
-
-
+			</form>
+		</field>
+	</record>
 
 </data>
 </openerp>

@@ -47,6 +47,7 @@ class hr_contract_inherit(models.Model):
 
 	cdp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'cdp')])
 	modification_move_rel = fields.One2many('contract.modification', 'contract_move_rel_id', 'Modificaciones')
+	additions = fields.Float('Adiciones', readonly=True)
 
 	def create_reg(self, cr, uid, contract, rubros_ids, context={}):
 
@@ -87,6 +88,7 @@ class hr_contract_inherit(models.Model):
 				'rubros_id': rubros.rubros_id.id,
 				'mov_type': 'reg',
 				'ammount': 0 if len(contract.cdp_move_rel) > 1 else contract.contract_v_tto,
+				'move_rel_id':rubros.move_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 			gastos_ids.append(rubros.id)
@@ -129,20 +131,25 @@ class hr_contract_inherit(models.Model):
 	
 	@api.onchange('cdp_move_rel')
 	def domain_rp(self):
+
+		
 		if self.cdp_move_rel:
+			if self.notes:
 
-			cdp_ids = [x.id for x in self.cdp_move_rel]
-			destino_ids = []
-			obj_presupuesto_origen_destino = self.env['presupuesto.moverubros']
+				cdp_ids = [x.id for x in self.cdp_move_rel]
+				destino_ids = []
+				obj_presupuesto_origen_destino = self.env['presupuesto.moverubros']
 
-			presupuesto_origen_destino_ids = obj_presupuesto_origen_destino.search([('move_rel_id', 'in', cdp_ids)])
+				presupuesto_origen_destino_ids = obj_presupuesto_origen_destino.search([('move_rel_id', 'in', cdp_ids)])
 
-			if presupuesto_origen_destino_ids:
-				for x in presupuesto_origen_destino_ids:
-					destino_ids.append(x.move_id.id)
+				if presupuesto_origen_destino_ids:
+					for x in presupuesto_origen_destino_ids:
+						destino_ids.append(x.move_id.id)
 
-			if destino_ids:
-				return {'domain': {'rp': [('id', 'in', (destino_ids))]}}
+				if destino_ids:
+					return {'domain': {'rp': [('id', 'in', (destino_ids))]}}
+			else:
+				raise Warning(_('Debe diligenciar el campo notas, que se encuentra en el menú <Información>.'))
 
 
 

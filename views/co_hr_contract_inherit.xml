@@ -28,13 +28,16 @@
 							attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
 				</button>
 
-
+				<field name="valor_ejecutar" position="after">
+					<field name="additions"/>
+				</field>
 
 				<notebook>
 
 					<page string="Modificaciones">
-
+					
 						<field name="modification_move_rel">
+
 							<tree editable="bottom" string="Modificaciones">
 								<field name="name"/>
 								<field name="date_begin"/>
@@ -43,8 +46,10 @@
 								<field name="additional_value"/>
 								<field name="cdp_move_rel" widget="many2many_tags" string="CDP"/>
 								<field name="rp" string="RP"/>
+								<button name="button_create_rp" type="object" string="Crear RP" class="oe_highlight" icon="gtk-index" attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
 								<field name="contract_move_rel_id" invisible="1"/>
 							</tree>
+
 						</field>
 
 					</page>
