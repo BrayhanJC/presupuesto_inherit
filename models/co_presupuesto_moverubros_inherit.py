@@ -157,7 +157,7 @@ class presupuesto_moverubros_inherit(models.Model):
 				if move.mov_type == 'red' or move.mov_type == 'cont' or move.mov_type == 'cdp' or move.mov_type == 'rec':
 					_logger.info('entro al cuarto')
 					saldo_resta += move.ammount
-				move_saldo = saldo_suma - saldo_resta
+				move_saldo = (saldo_suma - saldo_resta) if saldo_suma else saldo_resta
 			self.saldo_move = move_saldo
 		else:
 			self.saldo_move = move_saldo

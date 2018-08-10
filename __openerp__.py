@@ -41,7 +41,8 @@
         'views/co_account_invoice_inherit_view.xml',
         'views/co_account_voucher_inherit_view.xml',
         'views/co_hr_contract_inherit.xml',
-        'views/co_contract_modification.xml'
+        'views/co_contract_modification.xml',
+        'views/hr_payslip_view_inherit.xml'
     ],
     'installable': True,
     'auto_install': False,

@@ -44,7 +44,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 	_inherit = 'account.voucher'
 	_description = 'Voucher'
 
-	obl_move_rel = fields.One2many('presupuesto.move', 'obl_move_rel_id', 'OBL', domain=[('doc_type', '=' , 'obl'), ('state','=','confirm')], default = lambda self : self.env.context.get('default_obl_move_rel', False))
+	obl_move_rel = fields.One2many('presupuesto.move', 'obl_move_rel_id', 'OBL', domain=[('doc_type', '=' , 'obl')], default = lambda self : self.env.context.get('default_obl_move_rel', False))
 
 
 	def action_move_line_create(self, cr, uid, ids, context=None):
