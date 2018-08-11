@@ -82,7 +82,7 @@ class contract_modification(models.Model):
 			#'move_rel': contract.cdp.id,
 			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 			'contract_id': contract.id,
-			'description': contract.description,
+			'description': contract.description or "",
 		}
 
 		period_pool = self.pool.get('account.period')
@@ -127,6 +127,7 @@ class contract_modification(models.Model):
 		for x in contract.cdp_move_rel:
 			for line in x.gastos_ids:
 				if line: rubros_ids.append(line)
+						
 
 		rp = self.create_reg(cr, uid, contract, rubros_ids, context=context)
 		data_obj = self.pool.get('ir.model.data')
