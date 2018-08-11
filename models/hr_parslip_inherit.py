@@ -54,7 +54,7 @@ class hr_payslip_co(models.Model):
 		if not self.o_note:
 			raise osv.except_osv(_('Error!'),_(u'El Campo Información del pago debe de ser diligenciado'))
 
-
+		contrato_modificaciones = self.env['contract.modification']
 		move_pool = self.env['account.move']
 		presupuesto_move_pool = self.env['presupuesto.move']
 		period_pool = self.env['account.period']
@@ -62,6 +62,9 @@ class hr_payslip_co(models.Model):
 		timenow = time.strftime('%Y-%m-%d')
 
 		for slip in self:
+
+			contrato_modificaciones_rp = contrato_modificaciones.browse(slip.contract_id)
+
 			line_ids = []
 			debit_sum = 0.0
 			credit_sum = 0.0
@@ -216,11 +219,12 @@ class hr_payslip_co(models.Model):
 			move_id = move_pool.create(move)
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
-			if rp_contract and not obl:
-				_logger.info(presupuesto_move)
-				obl_id = presupuesto_move_pool.create(presupuesto_move)
-
-				self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
+			if not obl:
+				
+				if (rp_contract and not contrato_modificaciones_rp) or (not rp_contract and len(contrato_modificaciones_rp) == 1):
+					obl_id = presupuesto_move_pool.create(presupuesto_move)
+					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
+			
 			self.write({'move_id': move_id.id, 'period_id' : period_id})
 			if slip.journal_id.entry_posted:
 				move_pool.post([move_id.id])
