@@ -19,5 +19,32 @@
             </field>
         </record>
 
+
+
+
+
+
+        <record model="ir.ui.view" id="presupuesto_payment_voucher_form_inherit_presupuesto">
+            <field name="name">pago presupuesto</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="presupuesto.presupuesto_payment_voucher_form"/>
+            <field name="type">form</field>
+            <field name="priority" eval="7"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//field[@name='obl']" position="after">
+                    <field name="obl_move_rel" widget="many2many_tags" String="OBL" attrs="{'invisible': ['|',('type','=', 'sale'),('type','=', 'receipt') ]}"/>
+                </xpath>
+
+                <xpath expr="//field[@name='obl']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+
+
     </data>
 </openerp>
