@@ -50,6 +50,11 @@ class hr_payslip_co(models.Model):
 	@api.multi
 	def process_sheet(self):
 
+
+		if not self.o_note:
+			raise osv.except_osv(_('Error!'),_(u'El Campo Información del pago debe de ser diligenciado'))
+
+
 		move_pool = self.env['account.move']
 		presupuesto_move_pool = self.env['presupuesto.move']
 		period_pool = self.env['account.period']
@@ -294,6 +299,7 @@ class hr_payslip_co(models.Model):
 	@api.multi
 	def generate_voucher(self):
 
+
 		slip = self
 
 		details_ids = []
@@ -319,3 +325,5 @@ class hr_payslip_co(models.Model):
 			'nodestroy': True,
 			'target': 'new',
 		}
+
+

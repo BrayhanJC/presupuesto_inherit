@@ -58,6 +58,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 
 		for voucher in self.browse(cr, uid, ids, context=context):
+
 			date = voucher.date
 			partner_id = voucher.partner_id.id
 			reference = voucher.reference
@@ -115,13 +116,14 @@ class presupuesto_account_voucher_inherit(models.Model):
 					self.write(cr, uid, [voucher.id], {'rec':rec_id}, context=context)
 
 			if (voucher.type == 'purchase' or voucher.type == 'payment'):
+
+
 				gastos_ids = []
 				rubros_sum = 0.0
 				narration = voucher.narration
 				rubros_ids = []
 				pago = voucher.pago.id
 				
-
 				if voucher.rec_aut and not pago:
 					if voucher.obl_move_rel:
 						for x in voucher.obl_move_rel:
@@ -139,9 +141,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 						'partner_id': partner_id,
 						'description': narration,
 						'voucher_id':documento,
-						#'move_rel': obl_id,
 						'presupuesto_rel_move': [(6, 0,[move_arreglos])],
-						'move_rel_id':obl_id,
 						'state': 'confirm',
 					}
 
@@ -155,11 +155,15 @@ class presupuesto_account_voucher_inherit(models.Model):
 
 					presupuesto_move['fiscal_year'] = year
 
+					movel_rel_id = {}
 					for x in voucher.obl_move_rel:
+						movel_rel_id[x.id] = x.id
 						for line in x.gastos_ids:
 							if line: rubros_ids.append(line)
 
+
 					pago_id = presupuesto_move_pool.create(cr, uid, presupuesto_move, context=context)
+
 					for rubros in rubros_ids:
 						presupuesto_move_line = {
 							'move_id': pago_id,
@@ -167,7 +171,9 @@ class presupuesto_account_voucher_inherit(models.Model):
 							'mov_type': 'pago',
 							'period_id': period,
 							'date': date,
-							'ammount': rubros.ammount
+							'ammount': rubros.ammount,
+							'move_rel_id': movel_rel_id.get(rubros.move_id.id)
+							
 						}
 						presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 						gastos_ids.append(rubros.id)
@@ -202,8 +208,6 @@ class presupuesto_account_voucher_inherit(models.Model):
 			'date': voucher.date,
 			'doc_type': "pago",
 			'partner_id': self.pool.get('res.partner')._find_accounting_partner(voucher.partner_id).id,
-			#'move_rel': obl_id,
-			#'move_rel_id':obl_id,
 			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 			'voucher_id': voucher.id,
 			'description': voucher.narration,

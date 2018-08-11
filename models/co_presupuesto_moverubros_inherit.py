@@ -138,10 +138,8 @@ class presupuesto_moverubros_inherit(models.Model):
 			move_saldo = move_val = saldo_rel = 0.0
 			for move in ids:
 				if move.move_id.id == moverel:
-					_logger.info('entro al primero')
 					saldo_rel += move.ammount
 				if move.move_rel_id.id == moverel:
-					_logger.info('entro al segundo')
 					move_val += move.ammount
 
 				move_saldo = (saldo_rel - move_val) if saldo_rel else move_val
@@ -152,10 +150,8 @@ class presupuesto_moverubros_inherit(models.Model):
 			move_saldo = saldo_resta = saldo_suma = 0.0
 			for move in ids:
 				if move.mov_type == 'ini' or move.mov_type == 'adi' or move.mov_type == 'cre':
-					_logger.info('entro al tercero')
 					saldo_suma += move.ammount
 				if move.mov_type == 'red' or move.mov_type == 'cont' or move.mov_type == 'cdp' or move.mov_type == 'rec':
-					_logger.info('entro al cuarto')
 					saldo_resta += move.ammount
 				move_saldo = (saldo_suma - saldo_resta) if saldo_suma else saldo_resta
 			self.saldo_move = move_saldo

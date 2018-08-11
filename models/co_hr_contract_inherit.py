@@ -55,7 +55,9 @@ class hr_contract_inherit(models.Model):
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 
 		move_arreglos=[]
+		movel_rel_id = {}
 		for x in contract.cdp_move_rel:
+			movel_rel_id[x.id] = x.id
 			move_arreglos.append(x.id)
 
 		presupuesto_move = {
@@ -88,7 +90,7 @@ class hr_contract_inherit(models.Model):
 				'rubros_id': rubros.rubros_id.id,
 				'mov_type': 'reg',
 				'ammount': 0 if len(contract.cdp_move_rel) > 1 else contract.contract_v_tto,
-				'move_rel_id':rubros.move_id.id
+				'move_rel_id': movel_rel_id.get(rubros.move_id.id)
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 			gastos_ids.append(rubros.id)
