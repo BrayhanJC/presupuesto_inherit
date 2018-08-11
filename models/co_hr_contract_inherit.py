@@ -47,7 +47,35 @@ class hr_contract_inherit(models.Model):
 
 	cdp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'cdp')])
 	modification_move_rel = fields.One2many('contract.modification', 'contract_move_rel_id', 'Modificaciones')
-	additions = fields.Float('Adiciones', readonly=True)
+	additions = fields.Float('Adiciones',compute='_compute_additions', readonly=True)
+	valor_ejecutar= fields.Float('Valor Por Ejecutar',compute='_amount_ejecutarr',readonly=True)
+
+	@api.one
+	@api.depends('modification_move_rel') 
+	def _compute_additions(self):
+		additions=0.0
+		if self.modification_move_rel:
+
+			for record in self.modification_move_rel:
+				additions+=record.additional_value
+
+		self.additions=additions
+
+
+	@api.one
+	def _amount_ejecutarr(self):
+		res = {}
+		amount_ejecutar = 0.0
+		for move in self:
+			contract_v_tto = move.contract_v_tto
+			contract_av_eje = move.contract_av_eje
+			valor_liquidaciones = move.valor_liquidaciones
+			amount_ejecutar = contract_v_tto-contract_av_eje-valor_liquidaciones
+			res[move.id] = amount_ejecutar + self.additions
+		
+		self.valor_ejecutar=amount_ejecutar+ self.additions
+		return res
+	
 
 	def create_reg(self, cr, uid, contract, rubros_ids, context={}):
 
@@ -130,7 +158,26 @@ class hr_contract_inherit(models.Model):
 			'target': 'new',
 		}
 
+	@api.onchange('modification_move_rel')
+	def _onchange_modification(self):
 	
+		if self.modification_move_rel:
+
+			date_old="1000-01-01"
+			date_old = datetime.strptime(date_old, "%Y-%m-%d").date()
+			for x in self.modification_move_rel:
+				if x.date_end:
+					date_end= datetime.strptime(x.date_end, "%Y-%m-%d").date()
+					if x.date_end < self.date_end:
+						raise Warning(_('El campo Duración Hasta debe ser mayor a la fecha final del contrato, este campo se encuentra en el menú <Información>.'))
+					
+					if date_end > date_old:
+						date_old=date_end
+
+			self.date_end=date_old
+
+
+
 	@api.onchange('cdp_move_rel')
 	def domain_rp(self):
 

@@ -47,7 +47,7 @@ class contract_modification(models.Model):
 
 	name= fields.Char(string='N°')
 	date_begin = fields.Date(string='Fecha')
-	description= fields.Char(string=u'Descripción')
+	description= fields.Text(string=u'Descripción')
 	date_end = fields.Date(string=u'Duración Hasta')
 	additional_value = fields.Float(string='Valor Adicional')
 	cdp_move_rel = fields.Many2many(comodel_name='presupuesto.move', string="CDP",
@@ -59,7 +59,112 @@ class contract_modification(models.Model):
 	contract_move_rel_id = fields.Many2one('hr.contract', string=u'Contract')
 
 
-	@api.multi
-	def button_create_rp(self):
-		_logger.info('hola')
+	_defaults = {
+
+		'date_begin' : lambda self, cr, uid, context: context.get('date_begin', False),
+		'date_end' : lambda self, cr, uid, context: context.get('date_end', False),
+
+	}
+
+	def create_reg(self, cr, uid, contract, rubros_ids, context={}):
+
+		presupuesto_move_obj = self.pool.get('presupuesto.move')
+		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
+
+		move_arreglos=[]
+		for x in contract.cdp_move_rel:
+			move_arreglos.append(x.id)
+
+		presupuesto_move = {
+			'date': contract.date_begin,
+			'doc_type': "reg",
+			#'partner_id': self.pool.get('res.partner')._find_accounting_partner(contract.employee_id.address_home_id).id,
+			#'move_rel': contract.cdp.id,
+			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
+			'contract_id': contract.id,
+			'description': contract.description or "",
+		}
+
+		period_pool = self.pool.get('account.period')
+		ctx = dict(context or {}, account_period_prefer_normal=True)
+		search_periods = period_pool.find(cr, uid, contract.date_begin, context=ctx)
+		
+		period = search_periods[0]
+		presupuesto_move['period_id'] = period
+
+		fiscal_year_id = period_pool.browse(cr, uid, period, context=ctx)
+		presupuesto_move['fiscal_year'] = fiscal_year_id.fiscalyear_id.id
+
+		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
+
+
+		gastos_ids = []
+		for rubros in rubros_ids:
+			presupuesto_move_line = {
+				'move_id': presupuesto_move_id,
+				'rubros_id': rubros.rubros_id.id,
+				'mov_type': 'reg',
+				'ammount': 0 if len(contract.cdp_move_rel) > 1 else contract.additional_value,
+				'move_rel_id':rubros.move_id.id
+			}
+			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
+			gastos_ids.append(rubros.id)
+
+		contract_reg = {
+			'rp': presupuesto_move_id,
+		}
+		self.pool.get('contract.modification').write(cr, uid, [contract.id], contract_reg, context=context)
+
+		return presupuesto_move_id
+
+
+	def button_create_rp(self, cr, uid, ids, context={}):
+
+		contract = self.browse(cr, uid, ids, context=context)[0]
+
+		rubros_ids = []
+		# Add only active lines
+		for x in contract.cdp_move_rel:
+			for line in x.gastos_ids:
+				if line: rubros_ids.append(line)
+						
+
+		rp = self.create_reg(cr, uid, contract, rubros_ids, context=context)
+		data_obj = self.pool.get('ir.model.data')
+		result = data_obj._get_id(cr, uid, 'presupuesto', 'view_presupuesto_compromiso_move_form')
+		view_id = data_obj.browse(cr, uid, result).res_id
+
+		return {
+			'domain': "[('id','=', " + str(rp) + ")]",
+			'view_type': 'form',
+			'view_mode': 'form',
+			'res_model': 'presupuesto.move',
+			'context': context,
+			'res_id': rp,
+			'view_id': [view_id],
+			'type': 'ir.actions.act_window',
+			'nodestroy': True,
+			'target': 'new',
+		}
+
+
+	@api.onchange('cdp_move_rel')
+	def onchange_rp(self):
+
+		if self.cdp_move_rel:
+	
+			cdp_ids = [x.id for x in self.cdp_move_rel]
+			destino_ids = []
+			obj_presupuesto_origen_destino = self.env['presupuesto.moverubros']
+
+			presupuesto_origen_destino_ids = obj_presupuesto_origen_destino.search([('move_rel_id', 'in', cdp_ids)])
+
+			if presupuesto_origen_destino_ids:
+				for x in presupuesto_origen_destino_ids:
+					destino_ids.append(x.move_id.id)
+
+			if destino_ids:
+				return {'domain': {'rp': [('id', 'in', (destino_ids))]}}
+
+
 contract_modification()

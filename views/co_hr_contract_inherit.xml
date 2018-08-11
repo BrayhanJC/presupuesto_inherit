@@ -36,7 +36,7 @@
 
 					<page string="Modificaciones">
 					
-						<field name="modification_move_rel">
+						<field name="modification_move_rel" context="{'date_begin' : date_start, 'date_end' : date_end }">
 
 							<tree editable="bottom" string="Modificaciones">
 								<field name="name"/>
