@@ -63,7 +63,7 @@ class hr_payslip_co(models.Model):
 
 		for slip in self:
 
-			contrato_modificaciones_rp = contrato_modificaciones.browse(slip.contract_id)
+			contrato_modificaciones_rp = contrato_modificaciones.search([('contract_move_rel_id', '=', slip.contract_id.id)])
 
 			line_ids = []
 			debit_sum = 0.0
@@ -220,7 +220,8 @@ class hr_payslip_co(models.Model):
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
 			if not obl:
-				
+				_logger.info(rp_contract)
+				_logger.info(contrato_modificaciones_rp)
 				if (rp_contract and not contrato_modificaciones_rp) or (not rp_contract and len(contrato_modificaciones_rp) == 1):
 					obl_id = presupuesto_move_pool.create(presupuesto_move)
 					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
