@@ -59,9 +59,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 
 		move_arreglos=[]
-		movel_rel_id = {}
 		for x in invoice.rp_move_rel:
-			movel_rel_id[x.id] = x.id
 			move_arreglos.append(x.id)
 
 		
@@ -101,7 +99,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				'mov_type': 'obl',
 				'saldo_move': 0,
 				'ammount': 0 if len(invoice.rp_move_rel) > 1 else invoice.amount_untaxed,
-				'move_rel_id': movel_rel_id.get(rubros.move_id.id)
+				'move_rel_id': rubros.move_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
 			gastos_ids.append(rubros.id)

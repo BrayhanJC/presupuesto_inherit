@@ -155,9 +155,9 @@ class presupuesto_account_voucher_inherit(models.Model):
 
 					presupuesto_move['fiscal_year'] = year
 
-					movel_rel_id = {}
+					
 					for x in voucher.obl_move_rel:
-						movel_rel_id[x.id] = x.id
+						
 						for line in x.gastos_ids:
 							if line: rubros_ids.append(line)
 
@@ -172,7 +172,7 @@ class presupuesto_account_voucher_inherit(models.Model):
 							'period_id': period,
 							'date': date,
 							'ammount': rubros.ammount,
-							'move_rel_id': movel_rel_id.get(rubros.move_id.id)
+							'move_rel_id': rubros.move_id.id
 
 						}
 						presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
