@@ -87,8 +87,6 @@ class presupuesto_account_invoice_inherit(models.Model):
 		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
 
 
-
-
 		gastos_ids = []
 		for rubros in rubros_ids:
 			presupuesto_move_line = {

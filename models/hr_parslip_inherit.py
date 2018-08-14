@@ -179,11 +179,12 @@ class hr_payslip_co(models.Model):
 				if rubro_id and (rubro_category_code == "BASIC" or rubro_category_code == "ALW"):
 
 					obl_line = (0,0, {
-					'rubros_id' : rubro_id,
-					'mov_type': 'obl',
-					'period_id': period_id,
-					'date': date_move,
-					'ammount': amt or 0.0,
+						'rubros_id' : rubro_id,
+						'mov_type': 'obl',
+						'period_id': period_id,
+						'date': date_move,
+						'ammount': amt or 0.0,
+						'move_rel_id': rp_contract.id
 					})
 					gastos_ids.append(obl_line)
 					rubros_sum += obl_line[2]['ammount']
@@ -224,13 +225,16 @@ class hr_payslip_co(models.Model):
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
 			if not obl:
-				_logger.info(rp_contract)
-				_logger.info(contrato_modificaciones_rp)
 				if (rp_contract and not contrato_modificaciones_rp) or (not rp_contract and len(contrato_modificaciones_rp) == 1):
 					obl_id = presupuesto_move_pool.create(presupuesto_move)
+
 					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
+				
 			
 			self.write({'move_id': move_id.id, 'period_id' : period_id})
+
+
+
 			if slip.journal_id.entry_posted:
 				move_pool.post([move_id.id])
 		return True
