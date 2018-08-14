@@ -85,7 +85,7 @@ class hr_payslip_co(models.Model):
 			partner_fc_id = slip.employee_id.fc_id.id
 			date_move = slip.date_payment
 
-			rp_contract = slip.contract_id.rp.id
+			rp_contract = slip.contract_id.rp
 			obl = slip.obl_move_rel
 			obl_description = slip.name
 			fiscalyear_id = slip.period_id.fiscalyear_id.id if slip.period_id else period_pool.browse(period_id)[0].fiscalyear_id.id
@@ -101,11 +101,15 @@ class hr_payslip_co(models.Model):
 				'period_id': period_id,
 			}
 
+			move_arreglos = []
+			for x in rp_contract:
+				move_arreglos.append(x.id)
+
 			presupuesto_move = {
 				'doc_type': 'obl',
 				'date': date_move,
 				'partner_id': default_partner_id,
-				'move_rel': rp_contract,
+				'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 				'description': obl_description,
 				'fiscal_year': fiscalyear_id,
 				'period_id': period_id,
