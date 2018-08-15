@@ -56,10 +56,14 @@ class presupuesto_moverubros_inherit(models.Model):
 	def _check_saldo(self):
 
 		saldo_move = self._saldo_move()[ 0 ] if self.mov_type not in ['lobl', 'lreg', 'lcdp'] else self.saldo_move_
+
+
 		if self.mov_type == 'ini' or self.mov_type == 'rec' or self.mov_type == 'adi' or self.mov_type == 'cre':
 			return True
 		elif self.ammount > saldo_move:
 			raise Warning(_('El valor del movimiento no puede ser superior al saldo.'))
+
+
 		return True
 
 

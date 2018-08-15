@@ -55,15 +55,30 @@ class hr_payslip_co(models.Model):
 			raise osv.except_osv(_('Error!'),_(u'El Campo Información del pago debe de ser diligenciado'))
 
 		contrato_modificaciones = self.env['contract.modification']
+		presupuesto_tools = self.env['presupuesto.tools']
 		move_pool = self.env['account.move']
 		presupuesto_move_pool = self.env['presupuesto.move']
 		period_pool = self.env['account.period']
 		precision = self.env['decimal.precision'].precision_get('Payroll')
 		timenow = time.strftime('%Y-%m-%d')
-
+		#nos permite llevar la cuenta de cuantos de los rp que hay en modificaciones 
+		#tiene saldo mayor a cero
+		count = 0
 		for slip in self:
 
+			#con esto buscamos las modificaciones asociadas al contrato, si hay modificaciones miramos que los RP que estan
+			#asociados a la modifcacion tengan saldo, agregamos los valores a la lista de contrato_modificaciones_rp_id
+			#y aumentamos el count, es importante lo del count, porque si mas de una modificacion tiene saldo entonces esto
+			#nos determina que no debemos de crea la obligacion
 			contrato_modificaciones_rp = contrato_modificaciones.search([('contract_move_rel_id', '=', slip.contract_id.id)])
+			contrato_modificaciones_rp_id = []
+			if contrato_modificaciones_rp:
+				
+				for x in contrato_modificaciones_rp:
+					saldo_move = presupuesto_tools.get_saldo(x.rp)
+					if saldo_move > 0:
+						contrato_modificaciones_rp_id.append(x.rp.id)
+						count = count + 1
 
 			line_ids = []
 			debit_sum = 0.0
@@ -90,6 +105,18 @@ class hr_payslip_co(models.Model):
 			obl_description = slip.name
 			fiscalyear_id = slip.period_id.fiscalyear_id.id if slip.period_id else period_pool.browse(period_id)[0].fiscalyear_id.id
 
+			#creamos esta variable para saber que valor se le pasa el momento de crear la obligacion automatica, algo para tener
+			#en cuenta es que se tienen algunas condiciones. 
+			move_rel_id = 0
+			#se validan las condiciones para saber si creamos la obligacion o no
+			#las condiciones son que el RP principal tenga saldo y las modificaciones no.
+			#la otra condicion es que el RP principal no tenga saldo, y solo una de las modificaciones
+			#si lo tenga
+			_logger.info(presupuesto_tools.get_saldo(rp_contract))
+			if presupuesto_tools.get_saldo(rp_contract) > 0 and not count:
+				move_rel_id = rp_contract.id
+			elif presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1:
+				move_rel_id = contrato_modificaciones_rp_id[0]
 
 			default_partner_id = slip.employee_id.address_home_id.id
 			name = _('Payslip of %s') % (slip.employee_id.name)
@@ -177,14 +204,15 @@ class hr_payslip_co(models.Model):
 					credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
 				if rubro_id and (rubro_category_code == "BASIC" or rubro_category_code == "ALW"):
-
+					_logger.info("AMT")
+					_logger.info(amt)
 					obl_line = (0,0, {
 						'rubros_id' : rubro_id,
 						'mov_type': 'obl',
 						'period_id': period_id,
 						'date': date_move,
 						'ammount': amt or 0.0,
-						'move_rel_id': rp_contract.id
+						'move_rel_id': move_rel_id
 					})
 					gastos_ids.append(obl_line)
 					rubros_sum += obl_line[2]['ammount']
@@ -225,7 +253,8 @@ class hr_payslip_co(models.Model):
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
 			if not obl:
-				if (rp_contract and not contrato_modificaciones_rp) or (not rp_contract and len(contrato_modificaciones_rp) == 1):
+
+				if (presupuesto_tools.get_saldo(rp_contract)> 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
 					obl_id = presupuesto_move_pool.create(presupuesto_move)
 
 					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})

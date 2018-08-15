@@ -122,7 +122,6 @@ class presupuesto_account_invoice_inherit(models.Model):
 				if line: rubros_ids.append(line)
 
 		obl = self.create_obl(cr, uid, invoice, rubros_ids, context=context)
-		_logger.info("asas")
 		data_obj = self.pool.get('ir.model.data')
 		result = data_obj._get_id(cr, uid, 'presupuesto', 'view_presupuesto_obligacion_move_form')
 		view_id = data_obj.browse(cr, uid, result).res_id

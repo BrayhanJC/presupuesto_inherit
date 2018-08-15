@@ -31,3 +31,4 @@ import co_presupuesto_liberacion_move
 import co_hr_contract_inherit
 import co_contract_modification
 import hr_parslip_inherit
+import presupuesto_presupuesto_tools
