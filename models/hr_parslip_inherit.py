@@ -204,8 +204,6 @@ class hr_payslip_co(models.Model):
 					credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
 				if rubro_id and (rubro_category_code == "BASIC" or rubro_category_code == "ALW"):
-					_logger.info("AMT")
-					_logger.info(amt)
 					obl_line = (0,0, {
 						'rubros_id' : rubro_id,
 						'mov_type': 'obl',
@@ -216,7 +214,7 @@ class hr_payslip_co(models.Model):
 					})
 					gastos_ids.append(obl_line)
 					rubros_sum += obl_line[2]['ammount']
-
+					
 			if float_compare(credit_sum, debit_sum, precision_digits=precision) == -1:
 				acc_id = slip.journal_id.default_credit_account_id.id
 				if not acc_id:
@@ -254,7 +252,7 @@ class hr_payslip_co(models.Model):
 			presupuesto_move.update({'gastos_ids': gastos_ids})
 			if not obl:
 
-				if (presupuesto_tools.get_saldo(rp_contract)> 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
+				if (presupuesto_tools.get_saldo(rp_contract) > 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
 					obl_id = presupuesto_move_pool.create(presupuesto_move)
 
 					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})

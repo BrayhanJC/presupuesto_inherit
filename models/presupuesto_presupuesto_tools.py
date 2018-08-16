@@ -48,8 +48,6 @@ class Presupuesto(models.Model):
 							('move_id.state', '=', 'confirm'), 
 							('move_id.fiscal_year', '=', presupuesto_move_id.fiscal_year.id)])
 
-
-
 			if presupuesto_moverubros_relacionados_ids:
 
 				for x in presupuesto_moverubros_relacionados_ids:
@@ -58,8 +56,10 @@ class Presupuesto(models.Model):
 			if presupuesto_moverubros_ids:
 
 				for x in presupuesto_moverubros_ids:
-
 					saldo_rel = saldo_rel + x.ammount
 
 
-		return saldo_total - (saldo_rel - move_val) if saldo_rel else (saldo_total - move_val)
+		_logger.info("*******************************")
+		_logger.info(move_val)
+		_logger.info(saldo_rel)
+		return (saldo_rel - move_val) if saldo_rel else move_val
