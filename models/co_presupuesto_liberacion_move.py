@@ -83,55 +83,12 @@ class presupuesto_liberacion_rel(models.Model):
 	@api.multi
 	def button_liberar_presupuesto(self):
 		
-		view_ref = self.env['ir.model.data'].get_object_reference('presupuesto_inherit', 'view_presupuesto_liberacion_form')
-		view_id = view_ref[ 1 ] if view_ref else False
-
-
-		gastos_ids = list(set(self.get_gastos_ids(self.gastos_ids)))
-
-		if not gastos_ids:
-			raise osv.except_osv(u'Información', "No hay nada para liberar")
-
-
-		move_type = self.get_mov_type(self.doc_type)
-
-
-		sql = """ 
-			delete from presupuesto_moverubros
-			where move_id = %(mov_id)s
-			and ammount = 0
-			and mov_type = '%(mov_type)s';
-		"""% {
-			'mov_id': self.id,
-			'mov_type': move_type,
-		}
-
-		self.env.cr.execute( sql )
-		
-		for data in self.gastos_ids:	
-			result = {}
-			result['rubros_id'] = data.rubros_id.id
-			result['saldo_move_'] = self._get_diff_money(data)
-			result['move_id'] = self.id
-			result['ammount'] = 0
-			result['mov_type'] = move_type
-			result['move_rel_id'] = data.move_rel_id.id
-	
-			if not self.env['presupuesto.moverubros'].search([('move_id', '=', self.id), ('mov_type', '=', move_type), ('rubros_id', '=', data.rubros_id.id)]): 
-				self.env['presupuesto.moverubros'].create(result)	
-
-
-		return {
-			'view_type': 'form',
-			'view_mode': 'form',
-			'res_model': 'presupuesto.move',
-			'type': 'ir.actions.act_window',
-			'view_id': view_id,
-			'res_id': self.id,
-			'context': {'move_id': self.id, 'move_type': move_type},
-			'nodestroy': True,
-			'target': 'new',
-		}
+		presupuesto_move_tool = self.env['presupuesto.tools']
+		presupuesto_move_tool.uptdate_old_values_account_invoice()
+		presupuesto_move_tool.uptdate_old_values_account_voucher()
+		presupuesto_move_tool.uptdate_old_values_contact()
+		presupuesto_move_tool.uptdate_old_values_payslip()
+		presupuesto_move_tool.update_old_values()
 
 
 
@@ -151,16 +108,6 @@ class presupuesto_liberacion_rel(models.Model):
 
 		pass
 
-
-
-	def update_information(self):
-
-		presupuesto_move_tool = self.env['presupuesto.tools']
-		presupuesto_move_tool.uptdate_old_values_account_invoice()
-		presupuesto_move_tool.uptdate_old_values_account_voucher()
-		presupuesto_move_tool.uptdate_old_values_contact()
-		presupuesto_move_tool.uptdate_old_values_payslip()
-		presupuesto_move_tool.update_old_values()
 
 
 
