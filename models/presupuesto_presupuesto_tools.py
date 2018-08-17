@@ -58,8 +58,138 @@ class Presupuesto(models.Model):
 				for x in presupuesto_moverubros_ids:
 					saldo_rel = saldo_rel + x.ammount
 
-
-		_logger.info("*******************************")
-		_logger.info(move_val)
-		_logger.info(saldo_rel)
 		return (saldo_rel - move_val) if saldo_rel else move_val
+
+
+
+
+	def update_old_values(self):
+
+
+		presupuesto_move_pool = self.env['presupuesto.move']
+		presupuesto_moverel_pool = self.env['presupuesto.moverubros']
+		presupuesto_move_pool_ids = []
+
+		sql = """ 
+			SELECT id AS id
+			FROM presupuesto_move
+			WHERE move_rel IS NOT NULL
+		"""
+
+		self.env.cr.execute( sql )
+		res = self.env.cr.dictfetchall(  )
+
+		if res:
+
+			for x in res:
+
+				move_id = presupuesto_move_pool.browse(x.get('id'))
+
+				if move_id:
+
+					move_id.write({'presupuesto_rel_move' : [(6, 0,[move_id.move_rel.id])]})
+
+					presupuesto_moverel_id = presupuesto_moverel_pool.search([('move_id', '=', x.get('id'))])
+					
+					if presupuesto_moverel_id:
+
+						for z in presupuesto_moverel_id:
+
+							z.write({'move_rel_id': move_id.move_rel.id})
+
+	def uptdate_old_values_account_invoice(self):
+
+		sql = """ 
+			SELECT id AS id
+			FROM account_invoice
+			WHERE rp IS NOT NULL
+		"""
+
+		self.env.cr.execute( sql )
+		res = self.env.cr.dictfetchall(  )
+
+		account_invoice_pool = self.env['account.invoice']
+
+		if res:
+
+			for x in res:
+
+				account_invoice_id = account_invoice_pool.browse(x.get('id'))
+
+				if account_invoice_id:
+
+					account_invoice_id.write({'rp_move_rel': [(6, 0,[account_invoice_id.rp.id])]})
+
+
+	def uptdate_old_values_account_voucher(self):
+
+		sql = """ 
+			SELECT id AS id
+			FROM account_voucher
+			WHERE obl IS NOT NULL
+		"""
+
+		self.env.cr.execute( sql )
+		res = self.env.cr.dictfetchall(  )
+
+		account_voucher_pool = self.env['account.voucher']
+
+		if res:
+
+			for x in res:
+
+				account_voucher_id = account_voucher_pool.browse(x.get('id'))
+
+				if account_voucher_id:
+
+					account_voucher_id.write({'obl_move_rel': [(6, 0,[account_voucher_id.obl.id])]})
+
+
+
+	def uptdate_old_values_contact(self):
+
+		sql = """ 
+			SELECT id AS id
+			FROM hr_contract
+			WHERE cdp IS NOT NULL
+		"""
+
+		self.env.cr.execute( sql )
+		res = self.env.cr.dictfetchall(  )
+
+		hr_contract_pool = self.env['hr.contract']
+
+		if res:
+
+			for x in res:
+
+				hr_contract_id = hr_contract_pool.browse(x.get('id'))
+
+				if hr_contract_id:
+
+					hr_contract_id.write({'cdp_move_rel': [(6, 0,[hr_contract_id.cdp.id])]})
+
+
+	def uptdate_old_values_payslip(self):
+
+		sql = """ 
+			SELECT id AS id
+			FROM hr_payslip
+			WHERE obl IS NOT NULL
+		"""
+
+		self.env.cr.execute( sql )
+		res = self.env.cr.dictfetchall(  )
+
+		hr_payslip_pool = self.env['hr.payslip']
+
+		if res:
+
+			for x in res:
+
+				hr_payslip_id = hr_payslip_pool.browse(x.get('id'))
+
+				if hr_payslip_id:
+
+					hr_payslip_id.write({'obl_move_rel': [(6, 0,[hr_payslip_id.obl.id])]})
+

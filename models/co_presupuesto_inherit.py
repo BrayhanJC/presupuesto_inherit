@@ -63,7 +63,8 @@ class presupuesto_move_inherit(models.Model):
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
-	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)  
+	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
+	cdp_move_rel_id = fields.Many2one('hr.contract', string=u'Documento', ondelete='cascade')
 	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
 	obl_move_rel_id = fields.Many2one('account.voucher', string=u'Documento', ondelete='cascade')
 	obl_payslip_move_rel_id = fields.Many2one('hr.payslip', string=u'Documento', ondelete='cascade')

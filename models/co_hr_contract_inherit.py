@@ -45,7 +45,7 @@ class hr_contract_inherit(models.Model):
 	_inherit = 'hr.contract'
 	_description = 'Contract'
 
-	cdp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'cdp')])
+	cdp_move_rel = fields.One2many('presupuesto.move', 'cdp_move_rel_id', domain=[('doc_type', '=' , 'cdp')])
 	modification_move_rel = fields.One2many('contract.modification', 'contract_move_rel_id', 'Modificaciones')
 	additions = fields.Float('Adiciones',compute='_compute_additions', readonly=True)
 	valor_ejecutar= fields.Float('Valor Por Ejecutar',compute='_amount_ejecutarr',readonly=True)

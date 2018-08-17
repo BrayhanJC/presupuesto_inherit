@@ -11,9 +11,14 @@
                 <xpath expr = '//form[@string="CDP"]/header//button[2]' position='after'>
                     <field name='hide_button_confirm' invisible='1'/>
                     <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+
                 </xpath>
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b4f923b6be416c1e60a91774e00874bfca20a1e4
             </field>
         </record>
 

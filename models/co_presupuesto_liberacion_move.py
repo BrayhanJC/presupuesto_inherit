@@ -135,7 +135,6 @@ class presupuesto_liberacion_rel(models.Model):
 
 
 
-
 	@api.multi
 	def button_liberar_presupuesto_liberacion(self):
 		
@@ -151,6 +150,8 @@ class presupuesto_liberacion_rel(models.Model):
 
 
 		pass
+
+
 
 
 	"""
