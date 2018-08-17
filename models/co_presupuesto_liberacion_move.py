@@ -135,7 +135,6 @@ class presupuesto_liberacion_rel(models.Model):
 
 
 
-
 	@api.multi
 	def button_liberar_presupuesto_liberacion(self):
 		
@@ -151,6 +150,18 @@ class presupuesto_liberacion_rel(models.Model):
 
 
 		pass
+
+
+
+	def update_information(self):
+
+		presupuesto_move_tool = self.env['presupuesto.tools']
+		presupuesto_move_tool.uptdate_old_values_account_invoice()
+		presupuesto_move_tool.uptdate_old_values_account_voucher()
+		presupuesto_move_tool.uptdate_old_values_contact()
+		presupuesto_move_tool.uptdate_old_values_payslip()
+		presupuesto_move_tool.update_old_values()
+
 
 
 	"""
