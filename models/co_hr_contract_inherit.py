@@ -164,16 +164,37 @@ class hr_contract_inherit(models.Model):
 
 			date_old="1000-01-01"
 			date_old = datetime.strptime(date_old, "%Y-%m-%d").date()
+
+			date_begin_old="1000-01-01"
+			date_begin_old = datetime.strptime(date_begin_old, "%Y-%m-%d").date()
+
 			for x in self.modification_move_rel:
+
+				#calculando fecha inicial lejana
+				if x.date_begin:
+					date_begin= datetime.strptime(x.date_begin, "%Y-%m-%d").date()
+					if date_begin > date_begin_old:
+						date_begin_old=date_begin
+
+				#calculando fecha final lejana
 				if x.date_end:
 					date_end= datetime.strptime(x.date_end, "%Y-%m-%d").date()
-					if x.date_end < self.date_end:
-						raise Warning(_('El campo Duración Hasta debe ser mayor a la fecha final del contrato, este campo se encuentra en el menú <Información>.'))
-					
 					if date_end > date_old:
 						date_old=date_end
 
+
+
 			self.date_end=date_old
+			self.date_start=date_begin_old
+
+			if str(date_old) < self.date_end:
+				raise Warning(_('El campo Duración Hasta debe ser mayor a la fecha final del contrato, este campo se encuentra en el menú <Información>.'))
+			
+			if str(date_begin_old) < self.date_start:
+				raise Warning(_('El campo Fecha debe ser mayor a la fecha inicial del contrato, este campo se encuentra en el menú <Información>.'))
+			
+
+
 
 
 

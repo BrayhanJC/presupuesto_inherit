@@ -36,7 +36,7 @@
 
 					<page string="Modificaciones">
 					
-						<field name="modification_move_rel" context="{'date_begin' : date_start, 'date_end' : date_end }">
+						<field name="modification_move_rel" context="{'date_begin' : date_start, 'date_end' : date_end, 'employee_id' : employee_id , 'contract_invisible' : True, 'partner_invisible' : True}">
 
 							<tree editable="bottom" string="Modificaciones">
 								<field name="name"/>
@@ -45,17 +45,16 @@
 								<field name="date_end"/>
 								<field name="additional_value"/>
 								<field name="cdp_move_rel" widget="many2many_tags" string="CDP"/>
-								<field name="rp" string="RP"/>
+								<field name="rp" string="RP" context="{'contract_invisible' : True, 'partner_invisible' : True}"/>
 								<button name="button_create_rp" type="object" string="Crear RP" class="oe_highlight" icon="gtk-index" attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
 								<field name="contract_move_rel_id" invisible="1"/>
+								<field name="employee_id" />
 							</tree>
 
 						</field>
 
 					</page>
 				</notebook>
-
-
 
 			</field>
 		</record>

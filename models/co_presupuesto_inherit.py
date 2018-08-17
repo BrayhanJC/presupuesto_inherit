@@ -63,11 +63,41 @@ class presupuesto_move_inherit(models.Model):
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
-	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
+	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)  
 	rp_move_rel_id = fields.Many2one('account.invoice', string=u'Documento', ondelete='cascade')
 	obl_move_rel_id = fields.Many2one('account.voucher', string=u'Documento', ondelete='cascade')
 	obl_payslip_move_rel_id = fields.Many2one('hr.payslip', string=u'Documento', ondelete='cascade')
 	
+
+
+	@api.model
+	def fields_view_get(self, view_id=None, view_type=False, toolbar=False, submenu=False):
+
+		res = super(presupuesto_move_inherit, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+		
+		partner_invisible =self.env.context.get('partner_invisible')
+		contract_invisible =self.env.context.get('contract_invisible')
+
+		if view_type== 'form':
+			
+			doc = etree.XML(res['arch'])
+
+			if partner_invisible:
+				_logger.info('es invisible')
+				for node in doc.xpath("//field[@name='partner_id']"):
+					node.set('readonly', '1')
+					setup_modifiers(node, res['fields']['partner_id'])
+
+			if contract_invisible:
+				_logger.info('es invisible')
+				for node in doc.xpath("//field[@name='contract_id']"):
+					node.set('readonly', '1')
+					setup_modifiers(node, res['fields']['contract_id'])
+
+			res['arch']= etree.tostring(doc)
+
+		return res
+
 	@api.one
 	@api.onchange('gastos_ids')
 	def hide_button_change(self):
@@ -117,7 +147,7 @@ class presupuesto_move_inherit(models.Model):
 		boton que nos sirve para liberar el presupuesto es usado en la vista
 		de cdp, compromiso y obligacion
 
-	"""			
+	"""         
 
 
 	@api.onchange('presupuesto_rel_move')
