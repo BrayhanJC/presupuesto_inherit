@@ -48,7 +48,7 @@
 								<field name="rp" string="RP" context="{'contract_invisible' : True, 'partner_invisible' : True}"/>
 								<button name="button_create_rp" type="object" string="Crear RP" class="oe_highlight" icon="gtk-index" attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
 								<field name="contract_move_rel_id" invisible="1"/>
-								<field name="employee_id" />
+								<field name="employee_id" invisible="1"/>
 							</tree>
 
 						</field>

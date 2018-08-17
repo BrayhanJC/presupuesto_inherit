@@ -17,7 +17,7 @@
 					<field name="rp" string="RP"/>
 					<button name="button_create_rp" type="action" string="Crear RP" class="oe_highlight" attrs="{'invisible': ['|', ('cdp_move_rel','=', False), ('rp','!=', False)]}"/>
 					<field name="contract_move_rel_id" invisible="1"/>
-					<field name="employee_id"/>
+					<field name="employee_id" invisible="1"/>
 				</group>
 
 			</form>
