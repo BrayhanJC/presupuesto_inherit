@@ -57,12 +57,13 @@ class contract_modification(models.Model):
 						domain=[('doc_type', '=' , 'cdp')])
 	rp = fields.Many2one('presupuesto.move', string='RP', ondelete='restrict', domain=[('doc_type', '=' , 'reg'), ('state','=','confirm')])
 	contract_move_rel_id = fields.Many2one('hr.contract', string=u'Contract')
-
+	employee_id = fields.Many2one('hr.employee', string=u'Empleado')
 
 	_defaults = {
 
-		'date_begin' : lambda self, cr, uid, context: context.get('date_begin', False),
-		'date_end' : lambda self, cr, uid, context: context.get('date_end', False),
+		'date_begin' : lambda self, cr, uid, context: datetime.strftime(datetime.strptime(context.get('date_begin', False), "%Y-%m-%d").date() + timedelta(days=1), "%Y-%m-%d %H:%M:00") ,
+		'employee_id' : lambda self, cr, uid, context: context.get('employee_id', False),
+
 
 	}
 
@@ -78,7 +79,7 @@ class contract_modification(models.Model):
 		presupuesto_move = {
 			'date': contract.date_begin,
 			'doc_type': "reg",
-			#'partner_id': self.pool.get('res.partner')._find_accounting_partner(contract.employee_id.address_home_id).id,
+			'partner_id':  self.pool.get('res.partner')._find_accounting_partner(contract.employee_id.address_home_id).id,
 			#'move_rel': contract.cdp.id,
 			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
 			'contract_id': contract.id,
@@ -95,7 +96,9 @@ class contract_modification(models.Model):
 		fiscal_year_id = period_pool.browse(cr, uid, period, context=ctx)
 		presupuesto_move['fiscal_year'] = fiscal_year_id.fiscalyear_id.id
 
-		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
+		context_presupuesto_move = dict(context or {}, contract_invisible=True)
+
+		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context_presupuesto_move)
 
 
 		gastos_ids = []
@@ -146,6 +149,8 @@ class contract_modification(models.Model):
 			'nodestroy': True,
 			'target': 'new',
 		}
+
+
 
 
 	@api.onchange('cdp_move_rel')
