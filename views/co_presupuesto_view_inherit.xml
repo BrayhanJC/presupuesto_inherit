@@ -31,6 +31,7 @@
                 <xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
                     <field name='hide_button_confirm' invisible='1'/>
                     <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+                    <button name="button_update" string="Actualizar Informacion" type="object" groups="presupuesto.group_presupuesto"/>
                 </xpath>
 
 
