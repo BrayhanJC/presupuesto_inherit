@@ -367,3 +367,14 @@ class hr_payslip_co(models.Model):
 		}
 
 
+	def onchange_contract_id(
+		self, cr, uid, ids, date_from, date_to,
+		employee_id=False, contract_id=False, context=None
+	):
+
+		res = super(hr_payslip_co, self).onchange_contract_id(
+			cr, uid, ids, date_from, date_to,
+			employee_id=employee_id, contract_id=contract_id, context=context)
+
+
+		return res
