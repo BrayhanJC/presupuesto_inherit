@@ -169,12 +169,12 @@ class Presupuesto(models.Model):
 					_logger.info(len(hr_contract_id))
 					if len(hr_contract_id) == 1:
 
-						hr_contract_id.write({'cdp_move_rel_ids': [(6, 0,[hr_contract_id.cdp.id])]})
+						hr_contract_id.write({'cdp_move_rel': [(6, 0,[hr_contract_id.cdp.id])]})
 					else:
 						_logger.info("as")
 						for data in hr_contract_id:
 							_logger.info(data)
-							hr_contract_id.write({'cdp_move_rel_ids': [(6, 0,[data.cdp.id])]})
+							hr_contract_id.write({'cdp_move_rel': [(6, 0,[data.cdp.id])]})
 
 	def uptdate_old_values_payslip(self):
 
