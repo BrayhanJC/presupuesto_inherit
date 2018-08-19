@@ -120,7 +120,7 @@ class Presupuesto(models.Model):
 
 					values = {
 
-						'rp_move_rel': [(1, x.get('id'), {'destino_ids': account_invoice_id.rp.id})]
+						'rp_move_rel': [(6, 0, [account_invoice_id.rp.id])]
 
 					}
 
@@ -150,7 +150,7 @@ class Presupuesto(models.Model):
 
 					values = {
 
-						'obl_move_rel': [(1, x.get('id'), {'destino_ids':account_voucher_id.obl.id})]
+						'obl_move_rel': [(6, 0, [account_voucher_id.obl.id])]
 
 					}
 
@@ -181,7 +181,7 @@ class Presupuesto(models.Model):
 
 					values = {
 
-						'cdp_move_rel': [(1, x.get('id'), {'destino_ids':hr_contract_id.cdp.id})]
+						'cdp_move_rel': [(6, 0, [hr_contract_id.cdp.id])]
 
 					}
 
@@ -212,7 +212,7 @@ class Presupuesto(models.Model):
 
 					values = {
 
-						'obl_move_rel': [(1, x.get('id'), {'destino_ids':hr_payslip_id.obl.id})]
+						'obl_move_rel': [(6, 0, [hr_payslip_id.obl.id])]
 
 					}
 

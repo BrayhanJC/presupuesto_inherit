@@ -216,9 +216,7 @@ class presupuesto_move_inherit(models.Model):
 
 		presupuesto_tools = self.env['presupuesto.tools']
 		presupuesto_tools.uptdate_old_values_account_invoice()
-		presupuesto_tools.uptdate_old_values_account_voucher()
-		presupuesto_tools.uptdate_old_values_contact()
-		presupuesto_tools.uptdate_old_values_payslip()
+
 		#presupuesto_tools.update_old_values()
 
 presupuesto_move_inherit()
