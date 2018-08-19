@@ -43,10 +43,11 @@ class hr_payslip_co(models.Model):
 	_inherit = 'hr.payslip'
 	_description = 'Pay Slip'
 
-	#obl_move_rel = fields.One2many('presupuesto.move', 'obl_payslip_move_rel_id', u'Obligación presupuestal', domain=[('doc_type', '=' , 'obl')])
-	obl_move_rel = fields.Many2many('presupuesto.move', 'payslip_presupuesto_rel', 'payslip_id', 'presupuesto_move_id')
-
-
+	obl_move_rel = fields.Many2many(comodel_name='presupuesto.move', string="OBL",
+						relation='presupuesto_origen_destino_parslip',
+						column1='origen_ids',
+						column2='destino_ids', 
+						domain=[('doc_type', '=' , 'obl')])
 	@api.multi
 	def process_sheet(self):
 

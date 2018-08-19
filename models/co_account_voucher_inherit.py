@@ -44,9 +44,13 @@ class presupuesto_account_voucher_inherit(models.Model):
 	_inherit = 'account.voucher'
 	_description = 'Voucher'
 
-	obl_move_rel = fields.Many2many('presupuesto.move', 'account_voucher_presupuesto_rel', 'account_voucher_id', 'presupuesto_move_id')
+	#obl_move_rel = fields.Many2many('presupuesto.move', 'account_voucher_presupuesto_rel', 'account_voucher_id', 'presupuesto_move_id')
 
-
+	obl_move_rel = fields.Many2many(comodel_name='presupuesto.move', string="OBL",
+						relation='presupuesto_origen_destino_voucher',
+						column1='origen_ids',
+						column2='destino_ids', 
+						domain=[('doc_type', '=' , 'obl')])
 	def action_move_line_create(self, cr, uid, ids, context=None):
 		'''
 		Generar movimientos automáticos en presupuesto al validar recibos de caja o comprobantes de egreso
