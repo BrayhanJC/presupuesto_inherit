@@ -44,8 +44,8 @@ class presupuesto_account_invoice_inherit(models.Model):
 	_inherit = 'account.invoice'
 	_description = 'Account'
 
-	rp_move_rel = fields.One2many('presupuesto.move', 'rp_move_rel_id', domain=[('doc_type', '=' , 'reg')], states={'confirm': [('readonly', True)]})
 
+	rp_move_rel = fields.Many2many('presupuesto.move', 'account_invoice_presupuesto_rel', 'account_invoice_id', 'presupuesto_move_id')
 
 
 
