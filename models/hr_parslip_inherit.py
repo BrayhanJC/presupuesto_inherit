@@ -377,5 +377,5 @@ class hr_payslip_co(models.Model):
 			cr, uid, ids, date_from, date_to,
 			employee_id=employee_id, contract_id=contract_id, context=context)
 
-
+		_logger.info(res)
 		return res
