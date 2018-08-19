@@ -87,7 +87,13 @@ class Presupuesto(models.Model):
 
 				if move_id:
 
-					move_id.write({'presupuesto_rel_move' : [(0, 0,move_id.move_rel.id)]})
+					values = {
+
+						'presupuesto_rel_move': [(6, 0, [move_id.move_rel.id])]
+
+					}
+
+					move_id.write(res)
 
 					presupuesto_moverel_id = presupuesto_moverel_pool.search([('move_id', '=', x.get('id'))])
 					
