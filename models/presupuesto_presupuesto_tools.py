@@ -87,7 +87,7 @@ class Presupuesto(models.Model):
 
 				if move_id:
 
-					move_id.write({'presupuesto_rel_move' : [(6, 0,[move_id.move_rel.id])]})
+					move_id.write({'presupuesto_rel_move' : [(0, 0,[move_id.move_rel.id])]})
 
 					presupuesto_moverel_id = presupuesto_moverel_pool.search([('move_id', '=', x.get('id'))])
 					
@@ -118,7 +118,7 @@ class Presupuesto(models.Model):
 
 				if account_invoice_id:
 
-					account_invoice_id.write({'rp_move_rel': [(6, 0,[account_invoice_id.rp.id])]})
+					account_invoice_id.write({'rp_move_rel': [(0, 0,[account_invoice_id.rp.id])]})
 
 
 	def uptdate_old_values_account_voucher(self):
@@ -142,7 +142,7 @@ class Presupuesto(models.Model):
 
 				if account_voucher_id:
 
-					account_voucher_id.write({'obl_move_rel': [(6, 0,[account_voucher_id.obl.id])]})
+					account_voucher_id.write({'obl_move_rel': [(0, 0,[account_voucher_id.obl.id])]})
 
 
 
@@ -166,15 +166,9 @@ class Presupuesto(models.Model):
 				hr_contract_id = hr_contract_pool.browse(x.get('id'))
 
 				if hr_contract_id:
-					_logger.info(len(hr_contract_id))
-					if len(hr_contract_id) == 1:
 
-						hr_contract_id.write({'cdp_move_rel': [(6, 0,[hr_contract_id.cdp.id])]})
-					else:
-						_logger.info("as")
-						for data in hr_contract_id:
-							_logger.info(data)
-							hr_contract_id.write({'cdp_move_rel': [(6, 0,[data.cdp.id])]})
+					hr_contract_id.write({'cdp_move_rel': [(0, 0,[hr_contract_id.cdp.id])]})
+
 
 	def uptdate_old_values_payslip(self):
 
@@ -197,5 +191,5 @@ class Presupuesto(models.Model):
 
 				if hr_payslip_id:
 
-					hr_payslip_id.write({'obl_move_rel': [(6, 0,[hr_payslip_id.obl.id])]})
+					hr_payslip_id.write({'obl_move_rel': [(0, 0,[hr_payslip_id.obl.id])]})
 
