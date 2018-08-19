@@ -120,7 +120,7 @@ class Presupuesto(models.Model):
 
 					values = {
 
-						'rp_move_rel': [(0,0, {'destino_ids': account_invoice_id.rp.id})]
+						'rp_move_rel': [(1, x.get('id'), {'destino_ids': account_invoice_id.rp.id})]
 
 					}
 
@@ -148,7 +148,13 @@ class Presupuesto(models.Model):
 
 				if account_voucher_id:
 
-					account_voucher_id.write({'obl_move_rel': [(0, 0,account_voucher_id.obl.id)]})
+					values = {
+
+						'obl_move_rel': [(1, x.get('id'), {'destino_ids':account_voucher_id.obl.id})]
+
+					}
+
+					account_voucher_id.write(values)
 
 
 
@@ -173,7 +179,13 @@ class Presupuesto(models.Model):
 
 				if hr_contract_id:
 
-					hr_contract_id.write({'cdp_move_rel': [(0, 0,hr_contract_id.cdp.id)]})
+					values = {
+
+						'cdp_move_rel': [(1, x.get('id'), {'destino_ids':hr_contract_id.cdp.id})]
+
+					}
+
+					hr_contract_id.write(values)
 
 
 	def uptdate_old_values_payslip(self):
@@ -197,5 +209,13 @@ class Presupuesto(models.Model):
 
 				if hr_payslip_id:
 
-					hr_payslip_id.write({'obl_move_rel': [(0, 0,hr_payslip_id.obl.id)]})
+
+					values = {
+
+						'obl_move_rel': [(1, x.get('id'), {'destino_ids':hr_payslip_id.obl.id})]
+
+					}
+
+
+					hr_payslip_id.write(values)
 
