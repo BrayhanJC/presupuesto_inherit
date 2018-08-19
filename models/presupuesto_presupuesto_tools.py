@@ -93,7 +93,7 @@ class Presupuesto(models.Model):
 
 					}
 
-					move_id.write(res)
+					move_id.write(values)
 
 					presupuesto_moverel_id = presupuesto_moverel_pool.search([('move_id', '=', x.get('id'))])
 					
@@ -102,6 +102,8 @@ class Presupuesto(models.Model):
 						for z in presupuesto_moverel_id:
 
 							z.write({'move_rel_id': move_id.move_rel.id})
+
+
 
 	def uptdate_old_values_account_invoice(self):
 
