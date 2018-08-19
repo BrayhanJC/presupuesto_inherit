@@ -48,7 +48,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 	#rp_move_rel = fields.Many2many('presupuesto.move', 'account_invoice_presupuesto_rel', 'account_invoice_id', 'presupuesto_move_id')
 
 	rp_move_rel = fields.Many2many(comodel_name='presupuesto.move', string="REG",
-						relation='presupuesto_origen_destino_contrato',
+						relation='presupuesto_origen_destino_invoice',
 						column1='origen_ids',
 						column2='destino_ids', 
 						domain=[('doc_type', '=' , 'reg')])
