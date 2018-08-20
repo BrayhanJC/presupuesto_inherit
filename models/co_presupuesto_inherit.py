@@ -189,7 +189,6 @@ class presupuesto_move_inherit(models.Model):
 			self.date_stop = self.fiscal_year.date_stop
 
 
-
 	@api.one
 	def button_update(self):
 
