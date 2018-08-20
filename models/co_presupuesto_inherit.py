@@ -181,27 +181,6 @@ class presupuesto_move_inherit(models.Model):
 			period = self.env['account.period'].find(self.date)
 			self.period_id = period.id
 			self.fiscal_year = period.fiscalyear_id.id
-
-			if self.fiscal_year and 'default_doc_type' in self.env.context:
-
-				presupuesto_rel_move_ids = self.search([('fiscal_year', '=', self.fiscal_year.id), 
-						('doc_type', '=', doc_type.get(self.env.context.get('default_doc_type')))])
-
-				if presupuesto_rel_move_ids:
-
-					for x in presupuesto_rel_move_ids:
-
-						if presupuesto_tools.get_saldo(x) > 0:
-
-							presupuesto_rel_move.append(x.id)
-							
-					_logger.info(presupuesto_rel_move)
-					
-					return {'domain': {'presupuesto_rel_move': [('id', 'in', (presupuesto_rel_move))]}}
-
-
-
-
 		if not self.date and self.fiscal_year:
 			period = self.env['account.period'].find(self.date)
 			self.period_id = period.id

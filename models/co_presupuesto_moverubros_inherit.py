@@ -38,7 +38,9 @@ import openerp.addons.decimal_precision as dp
 import time
 from datetime import date, datetime, timedelta
 _logger = logging.getLogger(__name__)
-
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 class presupuesto_moverubros_inherit(models.Model):
 	_inherit = 'presupuesto.moverubros'
@@ -57,7 +59,7 @@ class presupuesto_moverubros_inherit(models.Model):
 
 		saldo_move = self._saldo_move()[ 0 ] if self.mov_type not in ['lobl', 'lreg', 'lcdp'] else self.saldo_move_
 
-
+		_logger.info(self.saldo_move)
 		if self.mov_type == 'ini' or self.mov_type == 'rec' or self.mov_type == 'adi' or self.mov_type == 'cre':
 			return True
 		elif self.ammount > saldo_move:
@@ -144,8 +146,7 @@ class presupuesto_moverubros_inherit(models.Model):
 				if move.move_id.id == moverel:
 					saldo_rel += move.ammount
 				if move.move_rel_id.id == moverel:
-					move_val += move.ammount
-
+					move_val += move.ammount	
 				move_saldo = (saldo_rel - move_val) if saldo_rel else move_val
 			self.saldo_move = move_saldo
 

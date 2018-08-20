@@ -113,7 +113,7 @@ class hr_payslip_co(models.Model):
 			#las condiciones son que el RP principal tenga saldo y las modificaciones no.
 			#la otra condicion es que el RP principal no tenga saldo, y solo una de las modificaciones
 			#si lo tenga
-			_logger.info(presupuesto_tools.get_saldo(rp_contract))
+
 			if presupuesto_tools.get_saldo(rp_contract) > 0 and not count:
 				move_rel_id = rp_contract.id
 			elif presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1:
@@ -137,7 +137,7 @@ class hr_payslip_co(models.Model):
 				'doc_type': 'obl',
 				'date': date_move,
 				'partner_id': default_partner_id,
-				'presupuesto_rel_move': [(6, 0,[move_arreglos])],
+				'presupuesto_rel_move': [(6, 0,move_arreglos)],
 				'description': obl_description,
 				'fiscal_year': fiscalyear_id,
 				'period_id': period_id,
@@ -251,6 +251,7 @@ class hr_payslip_co(models.Model):
 			move_id = move_pool.create(move)
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
+			_logger.info(presupuesto_move)
 			if not obl:
 
 				if (presupuesto_tools.get_saldo(rp_contract) > 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
