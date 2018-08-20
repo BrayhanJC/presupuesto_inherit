@@ -167,6 +167,28 @@ class presupuesto_move_inherit(models.Model):
 
 
 
+
+
+	@api.onchange('date')
+	def onchange_date(self):
+
+		doc_type = {'reg' : 'cdp', 'obl': 'reg', 'pago': 'obl'}
+
+		presupuesto_tools = self.env['presupuesto.tools']
+		presupuesto_rel_move = []
+
+		if self.date:
+			period = self.env['account.period'].find(self.date)
+			self.period_id = period.id
+			self.fiscal_year = period.fiscalyear_id.id
+		if not self.date and self.fiscal_year:
+			period = self.env['account.period'].find(self.date)
+			self.period_id = period.id
+			self.date = self.fiscal_year.date_start
+			self.date_start = self.fiscal_year.date_start
+			self.date_stop = self.fiscal_year.date_stop
+
+
 	@api.one
 	def button_update(self):
 
