@@ -252,12 +252,12 @@ class hr_payslip_co(models.Model):
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
 			_logger.info(presupuesto_move)
-			if not obl:
+#			if not obl:
 
-				if (presupuesto_tools.get_saldo(rp_contract) > 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
-					obl_id = presupuesto_move_pool.create(presupuesto_move)
+#				if (presupuesto_tools.get_saldo(rp_contract) > 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
+#					obl_id = presupuesto_move_pool.create(presupuesto_move)
 
-					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
+#					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
 				
 			
 			self.write({'move_id': move_id.id, 'period_id' : period_id})
@@ -369,14 +369,3 @@ class hr_payslip_co(models.Model):
 		}
 
 
-	def onchange_contract_id(
-		self, cr, uid, ids, date_from, date_to,
-		employee_id=False, contract_id=False, context=None
-	):
-
-		res = super(hr_payslip_co, self).onchange_contract_id(
-			cr, uid, ids, date_from, date_to,
-			employee_id=employee_id, contract_id=contract_id, context=context)
-
-		_logger.info(res)
-		return res
