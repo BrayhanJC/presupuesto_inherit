@@ -59,9 +59,14 @@ class hr_payslip_co(models.Model):
 		presupuesto_tools = self.env['presupuesto.tools']
 		move_pool = self.env['account.move']
 		presupuesto_move_pool = self.env['presupuesto.move']
+		presupuesto_moverubros_pool = self.env['presupuesto.moverubros']
 		period_pool = self.env['account.period']
 		precision = self.env['decimal.precision'].precision_get('Payroll')
 		timenow = time.strftime('%Y-%m-%d')
+
+
+
+
 		#nos permite llevar la cuenta de cuantos de los rp que hay en modificaciones 
 		#tiene saldo mayor a cero
 		count = 0
@@ -114,10 +119,25 @@ class hr_payslip_co(models.Model):
 			#la otra condicion es que el RP principal no tenga saldo, y solo una de las modificaciones
 			#si lo tenga
 
+
+			rp_rubros = []
+			reglas_salariales_rubros = []
+
 			if presupuesto_tools.get_saldo(rp_contract) > 0 and not count:
 				move_rel_id = rp_contract.id
 			elif presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1:
 				move_rel_id = contrato_modificaciones_rp_id[0]
+
+
+			if move_rel_id:
+			
+				rubros_ids = presupuesto_moverubros_pool.search([('move_id', '=', move_rel_id)])	
+
+				if rubros_ids:
+
+					rp_rubros = [x.rubros_id.id for x in rubros_ids]
+
+			
 
 			default_partner_id = slip.employee_id.address_home_id.id
 			name = _('Payslip of %s') % (slip.employee_id.name)
@@ -152,6 +172,9 @@ class hr_payslip_co(models.Model):
 				credit_account_id = line.salary_rule_id.account_credit.id
 				rubro_category_code = line.salary_rule_id.category_id.code
 				rubro_id = line.salary_rule_id.rubro_id.id
+				if rubro_id:
+					reglas_salariales_rubros.append(rubro_id)
+
 
 				if line.salary_rule_id.origin_partner == 'employee':
 					partner_id = default_partner_id
@@ -251,13 +274,20 @@ class hr_payslip_co(models.Model):
 			move_id = move_pool.create(move)
 
 			presupuesto_move.update({'gastos_ids': gastos_ids})
-			_logger.info(presupuesto_move)
-#			if not obl:
 
-#				if (presupuesto_tools.get_saldo(rp_contract) > 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
-#					obl_id = presupuesto_move_pool.create(presupuesto_move)
 
-#					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
+			diferencia_rubros = set(set(reglas_salariales_rubros) - set(rp_rubros))
+
+			if diferencia_rubros:
+
+				raise osv.except_osv(_('Error!'),_(u'Por favor verifique que el rubro de la regla salarial sea igual al del Registro Presupuestal'))
+
+			if not obl:
+
+				if (presupuesto_tools.get_saldo(rp_contract) > 0 and not count) or (presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1):
+					obl_id = presupuesto_move_pool.create(presupuesto_move)
+
+					self.write({'move_id': move_id.id, 'period_id' : period_id, 'obl_move_rel':[(6, 0, [obl_id.id])]})
 				
 			
 			self.write({'move_id': move_id.id, 'period_id' : period_id})
