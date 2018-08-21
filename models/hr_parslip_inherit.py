@@ -59,9 +59,14 @@ class hr_payslip_co(models.Model):
 		presupuesto_tools = self.env['presupuesto.tools']
 		move_pool = self.env['account.move']
 		presupuesto_move_pool = self.env['presupuesto.move']
+		presupuesto_moverubros_pool = self.env['presupuesto.moverubros']
 		period_pool = self.env['account.period']
 		precision = self.env['decimal.precision'].precision_get('Payroll')
 		timenow = time.strftime('%Y-%m-%d')
+
+
+
+
 		#nos permite llevar la cuenta de cuantos de los rp que hay en modificaciones 
 		#tiene saldo mayor a cero
 		count = 0
@@ -114,10 +119,24 @@ class hr_payslip_co(models.Model):
 			#la otra condicion es que el RP principal no tenga saldo, y solo una de las modificaciones
 			#si lo tenga
 
+
+			rp_rubros = []
+
 			if presupuesto_tools.get_saldo(rp_contract) > 0 and not count:
 				move_rel_id = rp_contract.id
 			elif presupuesto_tools.get_saldo(rp_contract) <= 0 and count == 1:
 				move_rel_id = contrato_modificaciones_rp_id[0]
+
+
+			if move_rel_id:
+			
+				rubros_ids = presupuesto_moverubros_pool.search([('move_id', '=', move_rel_id)])	
+
+				if rubros_ids:
+
+					rp_rubros = [x.rubros_id.id for x in rubros_ids]
+
+			_logger.info(rp_rubros)
 
 			default_partner_id = slip.employee_id.address_home_id.id
 			name = _('Payslip of %s') % (slip.employee_id.name)
