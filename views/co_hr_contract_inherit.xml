@@ -36,7 +36,7 @@
 
 					<page string="Modificaciones">
 					
-						<field name="modification_move_rel" context="{'date_begin' : date_start, 'date_end' : date_end, 'employee_id' : employee_id , 'contract_invisible' : True, 'partner_invisible' : True}">
+						<field name="modification_move_rel" context="{'date_begin' : date_start, 'date_end' : date_end, 'employee_id' : employee_id , 'contract_invisible' : True, 'partner_invisible' : True, 'contract_modification_id': id}">
 
 							<tree editable="bottom" string="Modificaciones">
 								<field name="name"/>

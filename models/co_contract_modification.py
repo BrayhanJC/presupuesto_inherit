@@ -72,6 +72,8 @@ class contract_modification(models.Model):
 		presupuesto_move_obj = self.pool.get('presupuesto.move')
 		presupuesto_moverubros_obj = self.pool.get('presupuesto.moverubros')
 
+		contract_id = context.get('contract_modification_id', True)
+
 		move_arreglos=[]
 		for x in contract.cdp_move_rel:
 			move_arreglos.append(x.id)
@@ -82,7 +84,7 @@ class contract_modification(models.Model):
 			'partner_id':  self.pool.get('res.partner')._find_accounting_partner(contract.employee_id.address_home_id).id,
 			#'move_rel': contract.cdp.id,
 			'presupuesto_rel_move': [(6, 0,[move_arreglos])],
-			'contract_id': contract.id,
+			'contract_id': contract_id,
 			'description': contract.description or "",
 		}
 
@@ -131,6 +133,8 @@ class contract_modification(models.Model):
 			for line in x.gastos_ids:
 				if line: rubros_ids.append(line)
 						
+
+
 
 		rp = self.create_reg(cr, uid, contract, rubros_ids, context=context)
 		data_obj = self.pool.get('ir.model.data')
