@@ -55,7 +55,7 @@ class presupuesto_move_inherit(models.Model):
 
 			period = self.env['account.period'].browse(vals.get('period_id'))
 
-			if period == 'done'
+			if period == 'done':
 
 				raise Warning(_(u'El periodo que se está usando ya está cerrado'))
 
@@ -72,7 +72,7 @@ class presupuesto_move_inherit(models.Model):
 
 			period = self.env['account.period'].browse(vals.get('period_id'))
 
-			if period == 'done'
+			if period == 'done':
 
 				raise Warning(_(u'El periodo que se está usando ya está cerrado'))
 
