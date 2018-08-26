@@ -220,7 +220,7 @@
         </record>
 
 
-        <record id="view_presupuesto_cuentas_por_pagar_tree" model="ir.ui.view">
+        <!--<record id="view_presupuesto_cuentas_por_pagar_tree" model="ir.ui.view">
             <field name="name">Cuentas por Pagar</field>
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
@@ -242,7 +242,7 @@
             <field name="act_window_id" ref="item_presupuesto_cuentas_por_pagar"/>            
         </record>
 
-        <menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>
+        <menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>-->
 
 
 
