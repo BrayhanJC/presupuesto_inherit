@@ -48,7 +48,7 @@ class hr_contract_inherit(models.Model):
 
 	modification_move_rel = fields.One2many('contract.modification', 'contract_move_rel_id', 'Modificaciones')
 	additions = fields.Float('Adiciones',compute='_compute_additions', readonly=True)
-	valor_ejecutar= fields.Float('Valor Por Ejecutar',compute='_amount_ejecutarr',readonly=True)
+	valor_ejecutar= fields.Float('Valor Por Ejecutar',compute='_amount_ejecutar',readonly=True)
 	cdp_move_rel = fields.Many2many(comodel_name='presupuesto.move', string="CDP",
 						relation='presupuesto_origen_destino_contrato',
 						column1='origen_ids',
@@ -67,7 +67,7 @@ class hr_contract_inherit(models.Model):
 
 
 	@api.one
-	def _amount_ejecutarr(self):
+	def _amount_ejecutar(self):
 		res = {}
 		amount_ejecutar = 0.0
 		for move in self:
