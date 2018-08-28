@@ -48,6 +48,39 @@ class presupuesto_move_inherit(models.Model):
 
 
 
+	@api.model
+	def create(self, vals):
+
+		if 'period_id' in vals:
+
+			period = self.env['account.period'].browse(vals.get('period_id'))
+
+			if period.state == 'done':
+
+				raise Warning(_(u'El periodo que se está usando ya está cerrado'))
+
+
+
+		return super(presupuesto_move_inherit, self).create(vals)
+
+
+
+	@api.multi
+	def write(self, vals):
+	
+		if 'period_id' in vals:
+
+			period = self.env['account.period'].browse(vals.get('period_id'))
+
+			if period.state == 'done':
+
+				raise Warning(_(u'El periodo que se está usando ya está cerrado'))
+
+		return super(presupuesto_move_inherit, self).write(vals)
+
+
+
+
 	presupuesto_rel_move = fields.Many2many(comodel_name='presupuesto.move',
 						relation='presupuesto_origen_destino',
 						column1='origen_ids',

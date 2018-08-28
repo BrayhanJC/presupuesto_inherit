@@ -219,5 +219,32 @@
             </field>
         </record>
 
+
+        <!--<record id="view_presupuesto_cuentas_por_pagar_tree" model="ir.ui.view">
+            <field name="name">Cuentas por Pagar</field>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';gray:state == 'done' " string="CDP">
+                    <field name="name"/>
+                    <field name="fiscal_year"/>
+                    <field name="date"/>
+                    <field name="description"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_presupuesto_cuentas_por_pagar" model="ir.actions.act_window">
+            <field name="name">Cuentas por Pagar</field>
+            <field name="res_model">presupuesto.move</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_presupuesto_cuentas_por_pagar_tree"/>
+            <field name="act_window_id" ref="item_presupuesto_cuentas_por_pagar"/>            
+        </record>
+
+        <menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>-->
+
+
+
     </data>
 </openerp>
