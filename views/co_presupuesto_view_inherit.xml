@@ -1,49 +1,49 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+	<data>
 
-        <!-- Extending presupuesto compromiso Form View -->
-        <record id="view_presupuesto_move_cdp_inherit_form" model="ir.ui.view">
-           <field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_form"/>
-            <field name="model">presupuesto.move</field>
-            <field name="arch" type="xml">
+		<!-- Extending presupuesto compromiso Form View -->
+		<record id="view_presupuesto_move_cdp_inherit_form" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_form"/>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
 
-                <xpath expr = '//form[@string="CDP"]/header//button[2]' position='after'>
-                    <field name='hide_button_confirm' invisible='1'/>
-                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+				<xpath expr = '//form[@string="CDP"]/header//button[2]' position='after'>
+					<field name='hide_button_confirm' invisible='1'/>
+					<button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
 
-                </xpath>
+				</xpath>
 
-            </field>
-        </record>
+			</field>
+		</record>
 
-        <!-- Extending presupuesto compromiso Form View -->
-        <record id="view_presupuesto_move_compromiso_inherit_form" model="ir.ui.view">
-           <field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_form"/>
-            <field name="model">presupuesto.move</field>
-            <field name="arch" type="xml">
-
-
-                <field name="partner_id" position="attributes">
-                    <attribute name="required">1</attribute>
-                </field> 
-
-                <xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
-                    <field name='hide_button_confirm' invisible='1'/>
-                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
-
-                </xpath>
+		<!-- Extending presupuesto compromiso Form View -->
+		<record id="view_presupuesto_move_compromiso_inherit_form" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_form"/>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
 
 
-                <xpath expr="//field[@name='move_rel']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
+				<field name="partner_id" position="attributes">
+					<attribute name="required">1</attribute>
+				</field> 
 
-                <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year)]" String="CDP"/>
-                </field>
+				<xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
+					<field name='hide_button_confirm' invisible='1'/>
+					<button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
 
-                <xpath expr="//field[@name='gastos_ids']" position="replace">
+				</xpath>
+
+
+				<xpath expr="//field[@name='move_rel']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+				<field name="move_rel" position="after" >
+					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year)]" String="CDP"/>
+				</field>
+
+				<xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">
 						<tree string="Rubros" editable="bottom" create='false'>
 							<field name="move_id" invisible="1"/>
@@ -52,43 +52,43 @@
 							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
-                            <field name="move_rel_id"/>
+							<field name="move_rel_id"/>
 						</tree>
 					</field>
-                </xpath>
+				</xpath>
 
 
 
-            </field>
-        </record>
+			</field>
+		</record>
 
-        <!-- Extending presupuesto obligacion Form View -->
-        <record id="view_presupuesto_move_obligacion_inherit_form" model="ir.ui.view">
-           <field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_form"/>
-            <field name="model">presupuesto.move</field>
-            <field name="arch" type="xml">
-
-
-                <field name="partner_id" position="attributes">
-                    <attribute name="required">1</attribute>
-                </field> 
+		<!-- Extending presupuesto obligacion Form View -->
+		<record id="view_presupuesto_move_obligacion_inherit_form" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_form"/>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
 
 
-                <xpath expr = '//form[@string="Obligación"]/header//button[2]' position='after'>
-                    <field name='hide_button_confirm' invisible='1'/>
-                    <button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
-                </xpath>
+				<field name="partner_id" position="attributes">
+					<attribute name="required">1</attribute>
+				</field> 
 
 
-                <xpath expr="//field[@name='move_rel']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
+				<xpath expr = '//form[@string="Obligación"]/header//button[2]' position='after'>
+					<field name='hide_button_confirm' invisible='1'/>
+					<button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
+				</xpath>
 
-                <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id)]" String="Compromiso"/>
-                </field>    
 
-                <xpath expr="//field[@name='gastos_ids']" position="replace">
+				<xpath expr="//field[@name='move_rel']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+				<field name="move_rel" position="after" >
+					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id)]" String="Compromiso"/>
+				</field>    
+
+				<xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">
 						<tree string="Rubros" editable="bottom" create='false'>
 							<field name="move_id" invisible="1"/>
@@ -97,41 +97,41 @@
 							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
-                            <field name="move_rel_id"/>
+							<field name="move_rel_id"/>
 						</tree>
 					</field>
-                </xpath>
-          
+				</xpath>
+		  
 
 
-            </field>
-        </record>
+			</field>
+		</record>
 
-        <!-- Extending presupuesto pago presupuestal Form View -->
-        <record id="view_presupuesto_move_pago_inherit_form" model="ir.ui.view">
-           <field name="inherit_id" ref="presupuesto.view_presupuesto_pago_move_form"/>
-            <field name="model">presupuesto.move</field>
-            <field name="arch" type="xml">
-
-
-
-                <field name="partner_id" position="attributes">
-                    <attribute name="required">1</attribute>
-                </field> 
-
-
-                <xpath expr="//field[@name='move_rel']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-
-                <field name="move_rel" position="after" >
-                    <field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id)]" String="Obligación"/>
-                </field> 
+		<!-- Extending presupuesto pago presupuestal Form View -->
+		<record id="view_presupuesto_move_pago_inherit_form" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_pago_move_form"/>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
 
 
 
+				<field name="partner_id" position="attributes">
+					<attribute name="required">1</attribute>
+				</field> 
 
-                <xpath expr="//field[@name='gastos_ids']" position="replace">
+
+				<xpath expr="//field[@name='move_rel']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>
+
+				<field name="move_rel" position="after" >
+					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id)]" String="Obligación"/>
+				</field> 
+
+
+
+
+				<xpath expr="//field[@name='gastos_ids']" position="replace">
 					<field name="gastos_ids" nolabel='1' context="{'move_id' : id}">
 						<tree string="Rubros" editable="bottom" create='false'>
 							<field name="move_id" invisible="1"/>
@@ -140,111 +140,160 @@
 							<field name="saldo_move" string="Por Ejecutar"/>
 							<field name="ammount" required="False"/>
 							<field name="notas"/>
-                            <field name="move_rel_id"/>
+							<field name="move_rel_id"/>
 						</tree>
 					</field>
-                </xpath>
+				</xpath>
 
 
-            </field>
-        </record>
+			</field>
+		</record>
 
 
-        <record id="presupuesto_move_cdp_inherit_search_form" model="ir.ui.view">
-            <field name="name">presupuesto.move_view_search</field>
-            <field name="model">presupuesto.move</field>
-            <field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search[@string='Search CDP']/group[@expand='0']/filter[@string='Status']" position="after">
-                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                </xpath> 
+		<record id="presupuesto_move_cdp_inherit_search_form" model="ir.ui.view">
+			<field name="name">presupuesto.move_view_search</field>
+			<field name="model">presupuesto.move</field>
+			<field name="inherit_id" ref="presupuesto.view_presupuesto_cdp_move_search"/>
+			<field name="arch" type="xml">
+				<xpath expr="/search[@string='Search CDP']/group[@expand='0']/filter[@string='Status']" position="after">
+					<filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+				</xpath> 
 
 
-            </field>
-        </record>
+			</field>
+		</record>
 
 
-        <record id="presupuesto_move_com_inherit_search_form" model="ir.ui.view">
-            <field name="name">presupuesto.move_view_com_search</field>
-            <field name="model">presupuesto.move</field>
-            <field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_search"/>
-            <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="move_rel"/>
-                </field>
+		<record id="presupuesto_move_com_inherit_search_form" model="ir.ui.view">
+			<field name="name">presupuesto.move_view_com_search</field>
+			<field name="model">presupuesto.move</field>
+			<field name="inherit_id" ref="presupuesto.view_presupuesto_compromiso_move_search"/>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="move_rel"/>
+				</field>
 
-                <xpath expr="/search[@string='Search Compromiso']/group[@expand='0']/filter[@string='Status']" position="after">
-                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                </xpath> 
-
-
-            </field>
-        </record>
+				<xpath expr="/search[@string='Search Compromiso']/group[@expand='0']/filter[@string='Status']" position="after">
+					<filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+				</xpath> 
 
 
-        <record id="presupuesto_move_obl_inherit_search_form" model="ir.ui.view">
-            <field name="name">presupuesto.move_view_obl_search</field>
-            <field name="model">presupuesto.move</field>
-            <field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_search"/>
-            <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="move_rel"/>
-                    <field name="partner_id"/>
-                </field>
-
-                <xpath expr="/search[@string='Search Obligación']/group[@expand='0']/filter[@string='Status']" position="after">
-                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                </xpath> 
+			</field>
+		</record>
 
 
-            </field>
-        </record>
+		<record id="presupuesto_move_obl_inherit_search_form" model="ir.ui.view">
+			<field name="name">presupuesto.move_view_obl_search</field>
+			<field name="model">presupuesto.move</field>
+			<field name="inherit_id" ref="presupuesto.view_presupuesto_obligacion_move_search"/>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="move_rel"/>
+					<field name="partner_id"/>
+				</field>
+
+				<xpath expr="/search[@string='Search Obligación']/group[@expand='0']/filter[@string='Status']" position="after">
+					<filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+				</xpath> 
 
 
-        <record id="presupuesto_move_pago_inherit_search_form" model="ir.ui.view">
-            <field name="name">presupuesto.move_view_pago_search</field>
-            <field name="model">presupuesto.move</field>
-            <field name="inherit_id" ref="presupuesto.view_presupuesto_pago_move_search"/>
-            <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="move_rel"/>
-                    <field name="partner_id"/>
-                </field>
-
-                <xpath expr="/search[@string='Search Pago presupuestal']//filter[2]" position="after">
-                    <filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                </xpath> 
+			</field>
+		</record>
 
 
-            </field>
-        </record>
+		<record id="presupuesto_move_pago_inherit_search_form" model="ir.ui.view">
+			<field name="name">presupuesto.move_view_pago_search</field>
+			<field name="model">presupuesto.move</field>
+			<field name="inherit_id" ref="presupuesto.view_presupuesto_pago_move_search"/>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="move_rel"/>
+					<field name="partner_id"/>
+				</field>
+
+				<xpath expr="/search[@string='Search Pago presupuestal']//filter[2]" position="after">
+					<filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+				</xpath> 
 
 
-        <!--<record id="view_presupuesto_cuentas_por_pagar_tree" model="ir.ui.view">
-            <field name="name">Cuentas por Pagar</field>
-            <field name="model">presupuesto.move</field>
-            <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';gray:state == 'done' " string="CDP">
-                    <field name="name"/>
-                    <field name="fiscal_year"/>
-                    <field name="date"/>
-                    <field name="description"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_presupuesto_cuentas_por_pagar" model="ir.actions.act_window">
-            <field name="name">Cuentas por Pagar</field>
-            <field name="res_model">presupuesto.move</field>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_presupuesto_cuentas_por_pagar_tree"/>
-            <field name="act_window_id" ref="item_presupuesto_cuentas_por_pagar"/>            
-        </record>
-
-        <menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>-->
+			</field>
+		</record>
 
 
+		<!--<record id="view_presupuesto_cuentas_por_pagar_tree" model="ir.ui.view">
+			<field name="name">Cuentas por Pagar</field>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
+				<tree colors="blue:state == 'draft';gray:state == 'done' " string="CDP">
+					<field name="name"/>
+					<field name="fiscal_year"/>
+					<field name="date"/>
+					<field name="description"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
 
-    </data>
+		<record id="action_presupuesto_cuentas_por_pagar" model="ir.actions.act_window">
+			<field name="name">Cuentas por Pagar</field>
+			<field name="res_model">presupuesto.move</field>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="view_presupuesto_cuentas_por_pagar_tree"/>
+			<field name="act_window_id" ref="item_presupuesto_cuentas_por_pagar"/>            
+		</record>
+
+		<menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>-->
+
+
+
+		<!-- action para cargar datos desde el submenu Ordenes de Compra sin SO, los cuales seran las compras
+		que no tienen asosciado un pedido de venta -->
+		<record model="ir.actions.server" id="presupuesto_inherit_cuentas_por_pagar">
+			<field name="name">Cuentas por pagar</field>
+			<field name="model_id" ref="model_presupuesto_move"/>
+			<field name="state">code</field>
+			<field name="code">
+
+obligacion = env['presupuesto.move']
+presupuesto_tools = env['presupuesto.tools']
+presupuesto_moverubros_pool = env['presupuesto.moverubros']
+
+
+obligaciones_ids = obligacion.search([('doc_type', '=', 'obl'), ('state', '=', 'confirm')], order = 'id desc')
+
+
+
+lista_obligaciones = []
+
+if obligaciones_ids:
+
+	for x in obligaciones_ids:
+
+		saldo = presupuesto_tools.get_saldo_obligaciones(x)		
+
+		if saldo > 0:
+
+			lista_obligaciones.append(x.id)
+
+
+action={"name": "Cuentas por pagar",
+			  "type": "ir.actions.act_window",
+			  "view_id": False,
+			  "view_type": "tree",
+			  "view_mode": "tree,form",
+			  "res_model": 'presupuesto.move',
+			  "domain": [["id", "in", lista_obligaciones]] }
+			</field>
+		</record>
+
+
+
+
+		<!--Agregando submenu en compras (purchase)  action="sale.action_orders" -->
+		<menuitem id="cuentas_por_pagar_menu" name="Cuentas por pagar"
+			parent="presupuesto.menu_view_presupuesto_gasto_form"
+			action="presupuesto_inherit.presupuesto_inherit_cuentas_por_pagar"/>
+
+
+	</data>
 </openerp>
