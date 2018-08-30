@@ -83,8 +83,8 @@ class Presupuesto(models.Model):
 				for x in presupuesto_move_ids:
 
 					saldo_total = self._get_diff_money(x)
-					
-		return saldo_total - move_val if saldo_total else move_val
+				
+				return saldo_total - move_val if saldo_total else move_val
 
 
 

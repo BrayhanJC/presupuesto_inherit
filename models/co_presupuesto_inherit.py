@@ -259,10 +259,13 @@ class presupuesto_move_inherit(models.Model):
 	def actualizar_estado_documento(self):
 
 		presupuesto_ids = self.search([('state', '=', 'confirm')])
-
+		presupuesto_tools = self.env['presupuesto.tools']
 		if presupuesto_ids:
 
 			for x in presupuesto_ids:
+
+
+				x.write({'saldo_sin_utilizar': presupuesto_tools.get_saldo_obligaciones(x)})
 
 				if x.saldo_sin_utilizar <= 0:
 					x.write({'estado_documento': 'close'})
