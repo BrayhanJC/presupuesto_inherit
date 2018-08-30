@@ -252,7 +252,7 @@ class presupuesto_move_inherit(models.Model):
 
 		if self.doc_type == 'cdp':
 
-			self.saldo_sin_utilizar = presupuesto_tools.get_saldo(self.browse(self.id))
+			self.saldo_sin_utilizar = presupuesto_tools.get_saldo_obligaciones(self.browse(self.id), None)
 
 		else:
 
@@ -261,7 +261,7 @@ class presupuesto_move_inherit(models.Model):
 				total = 0
 				for x in self.presupuesto_rel_move:
 
-					total += presupuesto_tools.get_saldo(x)
+					total += presupuesto_tools.get_saldo_obligaciones(x, self.browse(self.id))
 
 				self.saldo_sin_utilizar = total
 
@@ -278,7 +278,6 @@ class presupuesto_move_inherit(models.Model):
 		if presupuesto_ids:
 
 			for x in presupuesto_ids:
-				_logger.info(x.id)
 				x.write({'estado_documento': 'close'})
 
 

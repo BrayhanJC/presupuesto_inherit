@@ -63,11 +63,10 @@ class Presupuesto(models.Model):
 
 
 
-	def get_saldo_obligaciones(self, presupuesto_move_id):
+	def get_saldo_obligaciones(self, presupuesto_move_id, presupuesto_move):
 
 		saldo_total = 0 
 		move_val = 0
-		saldo_rel = 0
 
 		if presupuesto_move_id:
 
@@ -77,18 +76,14 @@ class Presupuesto(models.Model):
 							('move_id.state', '=', 'confirm'), 
 							('move_id.fiscal_year', '=', presupuesto_move_id.fiscal_year.id)])
 
-			
 			if presupuesto_moverubros_relacionados_ids:
-
-				saldo_total = presupuesto_move_id.amount_total
 
 				for x in presupuesto_moverubros_relacionados_ids:
 					move_val = move_val + x.ammount
+					saldo_total = saldo_total + x.saldo_move
 					
 
-				return saldo_total - move_val 
-
-			return 0
+		return saldo_total - move_val if saldo_total else move_val
 
 
 

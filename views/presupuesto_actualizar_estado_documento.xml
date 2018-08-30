@@ -5,7 +5,7 @@
             <field name="name">Actualizar estado documentos</field>
             <field name="interval_number">1</field>
             <field name="user_id" ref="base.user_root"/>
-            <field name="interval_type">minutes</field>
+            <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="model" eval="'presupuesto.move'"/>
             <field name="function" eval="'actualizar_estado_documento'"/>

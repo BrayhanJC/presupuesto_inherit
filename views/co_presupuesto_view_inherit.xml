@@ -312,7 +312,8 @@ action={"name": "Cuentas por pagar",
 		<!--Agregando submenu en compras (purchase)  action="sale.action_orders" -->
 		<menuitem id="cuentas_por_pagar_menu" name="Cuentas por pagar"
 			parent="presupuesto.menu_view_presupuesto_gasto_form"
-			action="presupuesto_inherit.presupuesto_inherit_cuentas_por_pagar"/>
+			action="presupuesto_inherit.presupuesto_inherit_cuentas_por_pagar"
+            sequence="1000"/>
 
 
 	</data>
