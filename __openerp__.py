@@ -1,4 +1,4 @@
-# -*- encoding: utf-9 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution

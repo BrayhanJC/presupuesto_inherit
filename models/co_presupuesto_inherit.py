@@ -228,9 +228,6 @@ class presupuesto_move_inherit(models.Model):
 		presupuesto_tools.uptdate_old_values_payslip()
 		presupuesto_tools.update_old_values()
 
-<<<<<<< HEAD
-presupuesto_move_inherit()
-=======
 
 	@api.one
 	@api.depends('gastos_ids', 'state')
@@ -277,4 +274,4 @@ presupuesto_move_inherit()
 
 
 presupuesto_move_inherit()
->>>>>>> 3d1f5a2bbe29b99b737d1d15f8be25813584ab4c
+
