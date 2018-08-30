@@ -265,7 +265,7 @@ class presupuesto_move_inherit(models.Model):
 			for x in presupuesto_ids:
 
 
-				x.write({'saldo_sin_utilizar': presupuesto_tools.get_saldo_obligaciones(x)})
+				#x.write({'saldo_sin_utilizar': presupuesto_tools.get_saldo_obligaciones(x)})
 
 				if x.saldo_sin_utilizar <= 0:
 					x.write({'estado_documento': 'close'})
