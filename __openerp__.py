@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-9 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -42,7 +42,8 @@
         'views/co_account_voucher_inherit_view.xml',
         'views/co_hr_contract_inherit.xml',
         'views/co_contract_modification.xml',
-        'views/hr_payslip_view_inherit.xml'
+        'views/hr_payslip_view_inherit.xml',
+        'views/presupuesto_actualizar_estado_documento.xml',
     ],
     'installable': True,
     'auto_install': False,
