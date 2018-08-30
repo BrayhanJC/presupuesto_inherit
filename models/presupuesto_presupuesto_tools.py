@@ -63,42 +63,6 @@ class Presupuesto(models.Model):
 
 
 
-	def get_saldo(self, presupuesto_move_id):
-
-		saldo_total = 0 
-		move_val = 0
-		saldo_rel = 0
-
-		if presupuesto_move_id:
-
-			saldo_total = presupuesto_move_id.amount_total
-
-			presupuesto_moverubros_pool = self.env['presupuesto.moverubros']
-
-			presupuesto_moverubros_ids = presupuesto_moverubros_pool.search([('move_id', '=', presupuesto_move_id.id), 
-										('move_id.state', '=', 'confirm'), 
-										('move_id.fiscal_year', '=', presupuesto_move_id.fiscal_year.id),
-										])
-
-
-			presupuesto_moverubros_relacionados_ids = presupuesto_moverubros_pool.search([('move_rel_id', '=', presupuesto_move_id.id), 
-							('move_id.state', '=', 'confirm'), 
-							('move_id.fiscal_year', '=', presupuesto_move_id.fiscal_year.id)])
-
-			if presupuesto_moverubros_relacionados_ids:
-
-				for x in presupuesto_moverubros_relacionados_ids:
-					move_val = move_val + x.ammount
-
-			if presupuesto_moverubros_ids:
-
-				for x in presupuesto_moverubros_ids:
-					saldo_rel = saldo_rel + x.ammount
-
-		return (saldo_rel - move_val) if saldo_rel else move_val
-
-
-
 	def get_saldo_obligaciones(self, presupuesto_move_id):
 
 		saldo_total = 0 
@@ -116,9 +80,11 @@ class Presupuesto(models.Model):
 			
 			if presupuesto_moverubros_relacionados_ids:
 
+				saldo_total = presupuesto_move_id.amount_total
+
 				for x in presupuesto_moverubros_relacionados_ids:
 					move_val = move_val + x.ammount
-					saldo_total = saldo_total + x.saldo_move
+					
 
 				return saldo_total - move_val 
 

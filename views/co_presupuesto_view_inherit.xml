@@ -11,8 +11,15 @@
 				<xpath expr = '//form[@string="CDP"]/header//button[2]' position='after'>
 					<field name='hide_button_confirm' invisible='1'/>
 					<button name="button_liberar_presupuesto" string="Liberar presupuesto" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('hide_button_confirm','=',True), ('state', '=', 'draft')]}"/>
-
 				</xpath>
+
+				<field name="description" position="after">
+					<field name="estado_documento" invisible='1'/>
+					<field name="saldo_sin_utilizar" invisible='1'/>
+				</field> 
+
+
+
 
 			</field>
 		</record>
@@ -27,6 +34,13 @@
 				<field name="partner_id" position="attributes">
 					<attribute name="required">1</attribute>
 				</field> 
+
+				<field name="partner_id" position="after">
+					<field name="estado_documento" invisible='1'/>
+					<field name="saldo_sin_utilizar" invisible='1'/>
+				</field> 
+
+
 
 				<xpath expr = '//form[@string="Compromiso"]/header//button[2]' position='after'>
 					<field name='hide_button_confirm' invisible='1'/>
@@ -71,6 +85,11 @@
 
 				<field name="partner_id" position="attributes">
 					<attribute name="required">1</attribute>
+				</field> 
+
+				<field name="partner_id" position="after">
+					<field name="estado_documento" invisible='1'/>
+					<field name="saldo_sin_utilizar" invisible='1'/>
 				</field> 
 
 
@@ -118,6 +137,13 @@
 				<field name="partner_id" position="attributes">
 					<attribute name="required">1</attribute>
 				</field> 
+
+
+				<field name="partner_id" position="after">
+					<field name="estado_documento" invisible='1'/>
+					<field name="saldo_sin_utilizar" invisible='1'/>
+				</field> 
+
 
 
 				<xpath expr="//field[@name='move_rel']" position="attributes">
@@ -255,11 +281,9 @@
 			<field name="code">
 
 obligacion = env['presupuesto.move']
-presupuesto_tools = env['presupuesto.tools']
-presupuesto_moverubros_pool = env['presupuesto.moverubros']
 
 
-obligaciones_ids = obligacion.search([('doc_type', '=', 'obl'), ('state', '=', 'confirm')], order = 'id desc')
+obligaciones_ids = obligacion.search([('estado_documento', '=', 'open'), ('doc_type', '=', 'obl'), ('state', '=', 'confirm')], order = 'id desc')
 
 
 
@@ -269,10 +293,6 @@ if obligaciones_ids:
 
 	for x in obligaciones_ids:
 
-		saldo = presupuesto_tools.get_saldo_obligaciones(x)		
-
-		if saldo > 0:
-
 			lista_obligaciones.append(x.id)
 
 
@@ -280,7 +300,7 @@ action={"name": "Cuentas por pagar",
 			  "type": "ir.actions.act_window",
 			  "view_id": False,
 			  "view_type": "tree",
-			  "view_mode": "tree,form",
+			  "view_mode": "tree",
 			  "res_model": 'presupuesto.move',
 			  "domain": [["id", "in", lista_obligaciones]] }
 			</field>

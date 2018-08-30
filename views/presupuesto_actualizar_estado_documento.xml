@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+        <record model="ir.cron" id="presupuesto_actualizar_estado_documentos">
+            <field name="name">Actualizar estado documentos</field>
+            <field name="interval_number">1</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="model" eval="'presupuesto.move'"/>
+            <field name="function" eval="'actualizar_estado_documento'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+
+
+    </data>
+</openerp>

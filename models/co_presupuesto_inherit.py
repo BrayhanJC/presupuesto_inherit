@@ -96,9 +96,20 @@ class presupuesto_move_inherit(models.Model):
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
 								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
+	
+
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
 	
 	
+	estado_documento = fields.Selection([
+								('open', 'Open'),
+								('close', 'Cerrado')
+								], 'Estado Documento', select=True, default = 'open')
+
+
+
+	saldo_sin_utilizar= fields.Float(compute='_saldo_sin_utilizar', default=0.0, store = True)
+
 
 
 	@api.model
@@ -231,5 +242,46 @@ class presupuesto_move_inherit(models.Model):
 		presupuesto_tools.uptdate_old_values_contact()
 		presupuesto_tools.uptdate_old_values_payslip()
 		presupuesto_tools.update_old_values()
+
+
+	@api.one
+	@api.depends('gastos_ids', 'state')
+	def _saldo_sin_utilizar(self):
+
+		presupuesto_tools = self.env['presupuesto.tools']
+
+		if self.doc_type == 'cdp':
+
+			self.saldo_sin_utilizar = presupuesto_tools.get_saldo(self.browse(self.id))
+
+		else:
+
+			if self.presupuesto_rel_move:
+
+				total = 0
+				for x in self.presupuesto_rel_move:
+
+					total += presupuesto_tools.get_saldo(x)
+
+				self.saldo_sin_utilizar = total
+
+
+
+
+
+
+	@api.model
+	def actualizar_estado_documento(self):
+
+		presupuesto_ids = self.search([('state', '=', 'confirm'), ('saldo_sin_utilizar', '=', 0)])
+
+		if presupuesto_ids:
+
+			for x in presupuesto_ids:
+				_logger.info(x.id)
+				x.write({'estado_documento': 'close'})
+
+
+
 
 presupuesto_move_inherit()
