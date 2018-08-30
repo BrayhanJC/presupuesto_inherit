@@ -144,7 +144,7 @@ class presupuesto_move_inherit(models.Model):
 	@api.onchange('gastos_ids')
 	def hide_button_change(self):
 		if self.gastos_ids:
-			diff = self._get_diff_money(self.gastos_ids)
+			diff = tools._get_diff_money(self.gastos_ids)
 			if diff <= 0:
 				self.hide_button_confirm = True
 			else:
@@ -159,31 +159,16 @@ class presupuesto_move_inherit(models.Model):
 	"""
 	@api.one
 	def _hide_button_confirm(self):
+		tools = self.env['presupuesto.tools']
 		if self.gastos_ids:
-			diff = self._get_diff_money(self.gastos_ids)
+			diff = tools._get_diff_money(self.gastos_ids)
 			if diff <= 0:
 				self.hide_button_confirm = True
 			else:
 				self.hide_button_confirm = False
 
-	""" 
-		metodo que nos sirve para saber si en los rubros que tiene el cdp, compromiso
-		o obligacion el monto de los gastos es igual.
 
-		recibe los ids de los rubros.
-		
-		retorna la diferencia entre el presupuesto y los gastos
-	"""
 
-	def _get_diff_money(self, ids):
-
-		if ids:
-			saldo_move = 0
-			ammount = 0
-			for data in ids:
-				saldo_move += data.saldo_move
-				ammount += data.ammount
-			return saldo_move - ammount
 
 	""" 
 		boton que nos sirve para liberar el presupuesto es usado en la vista
@@ -252,7 +237,7 @@ class presupuesto_move_inherit(models.Model):
 
 		if self.doc_type == 'cdp':
 
-			self.saldo_sin_utilizar = presupuesto_tools.get_saldo_obligaciones(self.browse(self.id), None)
+			self.saldo_sin_utilizar = presupuesto_tools.get_saldo_obligaciones(self.browse(self.id))
 
 		else:
 
@@ -261,7 +246,7 @@ class presupuesto_move_inherit(models.Model):
 				total = 0
 				for x in self.presupuesto_rel_move:
 
-					total += presupuesto_tools.get_saldo_obligaciones(x, self.browse(self.id))
+					total += presupuesto_tools.get_saldo_obligaciones(self.browse(self.id))
 
 				self.saldo_sin_utilizar = total
 
@@ -273,12 +258,17 @@ class presupuesto_move_inherit(models.Model):
 	@api.model
 	def actualizar_estado_documento(self):
 
-		presupuesto_ids = self.search([('state', '=', 'confirm'), ('saldo_sin_utilizar', '=', 0)])
+		presupuesto_ids = self.search([('state', '=', 'confirm')])
 
 		if presupuesto_ids:
 
 			for x in presupuesto_ids:
-				x.write({'estado_documento': 'close'})
+
+				if x.saldo_sin_utilizar <= 0:
+					x.write({'estado_documento': 'close'})
+				else:
+					x.write({'estado_documento': 'open'})
+
 
 
 

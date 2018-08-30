@@ -63,7 +63,7 @@ class Presupuesto(models.Model):
 
 
 
-	def get_saldo_obligaciones(self, presupuesto_move_id, presupuesto_move):
+	def get_saldo_obligaciones(self, presupuesto_move_id):
 
 		saldo_total = 0 
 		move_val = 0
@@ -72,20 +72,40 @@ class Presupuesto(models.Model):
 
 			presupuesto_moverubros_pool = self.env['presupuesto.moverubros']
 
-			presupuesto_moverubros_relacionados_ids = presupuesto_moverubros_pool.search([('move_rel_id', '=', presupuesto_move_id.id), 
+			presupuesto_move_ids = presupuesto_moverubros_pool.search([('move_id', '=', presupuesto_move_id.id), 
 							('move_id.state', '=', 'confirm'), 
 							('move_id.fiscal_year', '=', presupuesto_move_id.fiscal_year.id)])
 
-			if presupuesto_moverubros_relacionados_ids:
+			if presupuesto_move_ids:
 
-				for x in presupuesto_moverubros_relacionados_ids:
-					move_val = move_val + x.ammount
-					saldo_total = saldo_total + x.saldo_move
+				move_val = presupuesto_move_id.amount_total
+
+				for x in presupuesto_move_ids:
+
+					saldo_total = self._get_diff_money(x)
 					
-
 		return saldo_total - move_val if saldo_total else move_val
 
 
+
+	""" 
+		metodo que nos sirve para saber si en los rubros que tiene el cdp, compromiso
+		o obligacion el monto de los gastos es igual.
+
+		recibe los ids de los rubros.
+		
+		retorna la diferencia entre el presupuesto y los gastos
+	"""
+
+	def _get_diff_money(self, ids):
+
+		if ids:
+			saldo_move = 0
+			ammount = 0
+			for data in ids:
+				saldo_move += data.saldo_move
+				ammount += data.ammount
+			return saldo_move - ammount
 
 
 
