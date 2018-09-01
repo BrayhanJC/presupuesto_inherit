@@ -285,7 +285,7 @@ action={"name": "Cuentas por pagar",
 			  "view_type": "tree",
 			  "view_mode": "tree",
 			  "res_model": 'presupuesto.move',
-			  "domain": [("doc_type", "=", 'obl'), ('state', '=', 'close')] }
+			  "domain": [("doc_type", "=", 'obl'), ('state', '=', 'confirm')] }
 			</field>
 		</record>
 
