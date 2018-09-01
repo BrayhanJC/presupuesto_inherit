@@ -133,16 +133,14 @@
 
 
 
+				<field name="state" position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,confirm"/> 
+				</field>
+
+
 				<field name="partner_id" position="attributes">
 					<attribute name="required">1</attribute>
 				</field> 
-
-
-				<field name="description" position="after">
-					<field name="saldo_sin_utilizar"/>
-				</field> 
-
-
 
 
 				<xpath expr="//field[@name='move_rel']" position="attributes">
@@ -222,6 +220,18 @@
 				</xpath> 
 
 
+				<xpath expr="/search[@string='Search Obligación']/filter[@string='Open']" position="replace">
+					<filter string="Borrador" domain="[('state','=','draft')]" icon="terp-camera_test"/>
+				</xpath> 
+
+				<xpath expr="/search[@string='Search Obligación']/filter[@string='Closed']" position="replace">
+					<filter string="Confirmado" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+				</xpath> 
+
+				<xpath expr="/search[@string='Search Obligación']/filter[@string='Confirmado']" position="after">
+					<filter string="Cerrado" domain="[('state','=','close')]" icon="terp-camera_test"/>
+				</xpath> 
+
 			</field>
 		</record>
 
@@ -268,36 +278,6 @@
 		</record>
 
 		<menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>-->
-
-
-
-		<!-- action para cargar datos desde el submenu Ordenes de Compra sin SO, los cuales seran las compras
-		que no tienen asosciado un pedido de venta -->
-		<record model="ir.actions.server" id="presupuesto_inherit_cuentas_por_pagar">
-			<field name="name">Cuentas por pagar</field>
-			<field name="model_id" ref="model_presupuesto_move"/>
-			<field name="state">code</field>
-			<field name="code">
-
-action={"name": "Cuentas por pagar",
-			  "type": "ir.actions.act_window",
-			  "view_id": False,
-			  "view_type": "tree",
-			  "view_mode": "tree",
-			  "res_model": 'presupuesto.move',
-			  "domain": [("doc_type", "=", 'obl'), ('state', '=', 'confirm')] }
-			</field>
-		</record>
-
-
-
-
-		<!--Agregando submenu en compras (purchase)  action="sale.action_orders" -->
-		<menuitem id="cuentas_por_pagar_menu" name="Cuentas por pagar"
-			parent="presupuesto.menu_view_presupuesto_gasto_form"
-			action="presupuesto_inherit.presupuesto_inherit_cuentas_por_pagar"
-            sequence="1000"/>
-
 
 	</data>
 </openerp>
