@@ -272,7 +272,8 @@ class presupuesto_move_inherit(models.Model):
 			for x in sql_result:
 
 				sql = """ 
-					update presupuesto_move set saldo_sin_utilizar = (select pm.amount_total - (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s)
+					update presupuesto_move set saldo_sin_utilizar = (select pm.amount_total - CASE WHEN (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s) > 0 
+					THEN (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s) ELSE 0 END
 					from presupuesto_move pm
 					where pm.id = %(id)s)
 					where id = %(id)s
@@ -286,6 +287,7 @@ class presupuesto_move_inherit(models.Model):
 			sql = """ 
 				update presupuesto_move set state = 'close'
 				where saldo_sin_utilizar <= 0
+				and doc_type <> 'pago'
 				and state = 'confirm'
 			"""
 
