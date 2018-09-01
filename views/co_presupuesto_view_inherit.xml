@@ -14,8 +14,7 @@
 				</xpath>
 
 				<field name="description" position="after">
-					<field name="estado_documento" invisible='1'/>
-					<field name="saldo_sin_utilizar" invisible='1'/>
+					<field name="saldo_sin_utilizar"/>
 				</field> 
 
 
@@ -35,10 +34,10 @@
 					<attribute name="required">1</attribute>
 				</field> 
 
-				<field name="partner_id" position="after">
-					<field name="estado_documento" invisible='1'/>
-					<field name="saldo_sin_utilizar" invisible='1'/>
+				<field name="description" position="after">
+					<field name="saldo_sin_utilizar"/>
 				</field> 
+
 
 
 
@@ -87,10 +86,10 @@
 					<attribute name="required">1</attribute>
 				</field> 
 
-				<field name="partner_id" position="after">
-					<field name="estado_documento" invisible='1'/>
-					<field name="saldo_sin_utilizar" invisible='1'/>
+				<field name="description" position="after">
+					<field name="saldo_sin_utilizar"/>
 				</field> 
+
 
 
 				<xpath expr = '//form[@string="Obligación"]/header//button[2]' position='after'>
@@ -139,10 +138,10 @@
 				</field> 
 
 
-				<field name="partner_id" position="after">
-					<field name="estado_documento" invisible='1'/>
-					<field name="saldo_sin_utilizar" invisible='1'/>
+				<field name="description" position="after">
+					<field name="saldo_sin_utilizar"/>
 				</field> 
+
 
 
 
@@ -280,29 +279,13 @@
 			<field name="state">code</field>
 			<field name="code">
 
-obligacion = env['presupuesto.move']
-
-
-obligaciones_ids = obligacion.search([('estado_documento', '=', 'open'), ('doc_type', '=', 'obl'), ('state', '=', 'confirm')], order = 'id desc')
-
-
-
-lista_obligaciones = []
-
-if obligaciones_ids:
-
-	for x in obligaciones_ids:
-
-			lista_obligaciones.append(x.id)
-
-
 action={"name": "Cuentas por pagar",
 			  "type": "ir.actions.act_window",
 			  "view_id": False,
 			  "view_type": "tree",
 			  "view_mode": "tree",
 			  "res_model": 'presupuesto.move',
-			  "domain": [["id", "in", lista_obligaciones]] }
+			  "domain": [("doc_type", "=", 'obl'), ('state', '=', 'close')] }
 			</field>
 		</record>
 

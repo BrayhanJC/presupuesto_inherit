@@ -78,7 +78,17 @@ class presupuesto_move_inherit(models.Model):
 
 		return super(presupuesto_move_inherit, self).write(vals)
 
+	@api.multi
+	def button_confirm(self):
+		res = self.write({'state': 'confirm'})
+		self._saldo_sin_utilizar(self.presupuesto_rel_move)
+		return res
 
+	@api.multi
+	def button_cancel(self):
+		res = self.write({'state': 'draft'}) 
+		self._saldo_sin_utilizar(self.presupuesto_rel_move)
+		return res
 
 
 	presupuesto_rel_move = fields.Many2many(comodel_name='presupuesto.move',
@@ -100,15 +110,16 @@ class presupuesto_move_inherit(models.Model):
 
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
 	
-	
-	estado_documento = fields.Selection([
-								('open', 'Open'),
+
+	state = fields.Selection([
+								('draft', 'Draft'),
+								('confirm', 'Confirmed'),
 								('close', 'Cerrado')
-								], 'Estado Documento', select=True, default = 'open')
+								], 'Status', select=True, default = 'draft')
 
 
-
-	saldo_sin_utilizar= fields.Float(compute='_saldo_sin_utilizar', default=0.0, store = True)
+	
+	saldo_sin_utilizar= fields.Float('Saldo sin utilizar', default=0.0, store=True, readonly=True)
 
 
 
@@ -143,6 +154,7 @@ class presupuesto_move_inherit(models.Model):
 	@api.one
 	@api.onchange('gastos_ids')
 	def hide_button_change(self):
+		tools = self.env['presupuesto.tools']
 		if self.gastos_ids:
 			diff = tools._get_diff_money(self.gastos_ids)
 			if diff <= 0:
@@ -229,28 +241,16 @@ class presupuesto_move_inherit(models.Model):
 		presupuesto_tools.update_old_values()
 
 
-	@api.one
-	@api.depends('gastos_ids', 'state')
-	def _saldo_sin_utilizar(self):
+
+	def _saldo_sin_utilizar(self, presupuesto_rel_move):
 
 		presupuesto_tools = self.env['presupuesto.tools']
 
-		if self.doc_type == 'cdp':
+		if presupuesto_rel_move:
 
-			self.saldo_sin_utilizar = presupuesto_tools.get_saldo_obligaciones(self.browse(self.id))
-
-		else:
-
-			if self.presupuesto_rel_move:
-
-				total = 0
-				for x in self.presupuesto_rel_move:
-
-					total += presupuesto_tools.get_saldo_obligaciones(self.browse(self.id))
-
-				self.saldo_sin_utilizar = total
-
-
+			for x in presupuesto_rel_move:
+				
+				presupuesto_tools.get_saldo_obligaciones(x)
 
 
 
@@ -265,12 +265,11 @@ class presupuesto_move_inherit(models.Model):
 			for x in presupuesto_ids:
 
 
-				#x.write({'saldo_sin_utilizar': presupuesto_tools.get_saldo_obligaciones(x)})
+				#presupuesto_tools.get_saldo_obligaciones(x)
 
 				if x.saldo_sin_utilizar <= 0:
-					x.write({'estado_documento': 'close'})
-				else:
-					x.write({'estado_documento': 'open'})
+					x.write({'state': 'close'})
+
 
 
 

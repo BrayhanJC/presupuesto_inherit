@@ -62,29 +62,37 @@ class Presupuesto(models.Model):
 
 
 
-
+	
 	def get_saldo_obligaciones(self, presupuesto_move_id):
 
 		saldo_total = 0 
 		move_val = 0
+		total = 0
 
 		if presupuesto_move_id:
 
 			presupuesto_moverubros_pool = self.env['presupuesto.moverubros']
 
-			presupuesto_move_ids = presupuesto_moverubros_pool.search([('move_id', '=', presupuesto_move_id.id), 
+			presupuesto_move_ids = presupuesto_moverubros_pool.search([('move_rel_id', '=', presupuesto_move_id.id), 
 							('move_id.state', '=', 'confirm'), 
 							('move_id.fiscal_year', '=', presupuesto_move_id.fiscal_year.id)])
 
-			if presupuesto_move_ids:
 
-				move_val = presupuesto_move_id.amount_total
+			saldo_total = presupuesto_move_id.amount_total
+			total = saldo_total
+			if presupuesto_move_ids:
 
 				for x in presupuesto_move_ids:
 
-					saldo_total = self._get_diff_money(x)
-				
-				return saldo_total - move_val if saldo_total else move_val
+					move_val = move_val + x.ammount
+
+				total = saldo_total - move_val if move_val else saldo_total 	
+
+
+			presupuesto_move_id.write({'saldo_sin_utilizar': total})
+			_logger.info(total)
+			return total
+			
 
 
 
