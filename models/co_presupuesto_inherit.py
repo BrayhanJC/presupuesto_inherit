@@ -283,11 +283,13 @@ class presupuesto_move_inherit(models.Model):
 				self.env.cr.execute( sql )
 				
 
-				sql = """ 
-					update presupuesto_move set state = 'close'
-					where saldo_sin_utilizar <= 0
-					and state = 'confirm'
-				"""
+			sql = """ 
+				update presupuesto_move set state = 'close'
+				where saldo_sin_utilizar <= 0
+				and state = 'confirm'
+			"""
+
+			self.env.cr.execute( sql )
 			_logger.info("Finalice")
 
 
