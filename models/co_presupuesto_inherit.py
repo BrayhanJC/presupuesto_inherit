@@ -258,18 +258,37 @@ class presupuesto_move_inherit(models.Model):
 	@api.model
 	def actualizar_estado_documento(self):
 
-		presupuesto_ids = self.search([('state', '=', 'confirm')])
+		
 		presupuesto_tools = self.env['presupuesto.tools']
-		if presupuesto_ids:
-
-			for x in presupuesto_ids:
 
 
-				#presupuesto_tools.get_saldo_obligaciones(x)
+		sql = """ SELECT id as id from presupuesto_move"""
+		self.env.cr.execute(sql)
+		sql_result =  self.env.cr.fetchall()
 
-				if x.saldo_sin_utilizar <= 0:
-					x.write({'state': 'close'})
 
+		if sql_result:
+			
+			for x in sql_result:
+
+				sql = """ 
+					update presupuesto_move set saldo_sin_utilizar = (select pm.amount_total - (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s)
+					from presupuesto_move pm
+					where pm.id = %(id)s)
+					where id = %(id)s
+				"""% {
+					'id': list(x)[0],
+				}
+
+				self.env.cr.execute( sql )
+				
+
+				sql = """ 
+					update presupuesto_move set state = 'close'
+					where saldo_sin_utilizar <= 0
+					and state = 'confirm'
+				""
+			_logger.info("Finalice")
 
 
 
