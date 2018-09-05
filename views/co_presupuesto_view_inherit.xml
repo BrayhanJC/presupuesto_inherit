@@ -53,7 +53,7 @@
 				</xpath>
 
 				<field name="move_rel" position="after" >
-					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year)]" String="CDP"/>
+					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'cdp'),('fiscal_year', '=', fiscal_year), ('state', '=', 'confirm')]" String="CDP"/>
 				</field>
 
 				<xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -103,7 +103,7 @@
 				</xpath>
 
 				<field name="move_rel" position="after" >
-					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id)]" String="Compromiso"/>
+					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'reg'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id), ('state', '=', 'confirm')]" String="Compromiso"/>
 				</field>    
 
 				<xpath expr="//field[@name='gastos_ids']" position="replace">
@@ -148,7 +148,7 @@
 				</xpath>
 
 				<field name="move_rel" position="after" >
-					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id)]" String="Obligación"/>
+					<field name="presupuesto_rel_move" widget="many2many_tags" domain="[('doc_type', '=', 'obl'), ('fiscal_year', '=', fiscal_year), ('partner_id', '=', partner_id), ('state', '=', 'confirm')]" String="Obligación"/>
 				</field> 
 
 
@@ -255,29 +255,33 @@
 		</record>
 
 
-		<!--<record id="view_presupuesto_cuentas_por_pagar_tree" model="ir.ui.view">
-			<field name="name">Cuentas por Pagar</field>
+		<record id="view_presupuesto_anual_inherit_form" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_year_move_form"/>
 			<field name="model">presupuesto.move</field>
 			<field name="arch" type="xml">
-				<tree colors="blue:state == 'draft';gray:state == 'done' " string="CDP">
-					<field name="name"/>
-					<field name="fiscal_year"/>
-					<field name="date"/>
-					<field name="description"/>
-					<field name="state"/>
-				</tree>
+
+				<field name="state" position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,confirm"/> 
+				</field>
+
 			</field>
 		</record>
 
-		<record id="action_presupuesto_cuentas_por_pagar" model="ir.actions.act_window">
-			<field name="name">Cuentas por Pagar</field>
-			<field name="res_model">presupuesto.move</field>
-			<field name="view_mode">tree</field>
-			<field name="view_id" ref="view_presupuesto_cuentas_por_pagar_tree"/>
-			<field name="act_window_id" ref="item_presupuesto_cuentas_por_pagar"/>            
+
+
+		<record id="view_presupuesto_modificaciones_inherit_form" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_modifica_move_form"/>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
+
+				<field name="state" position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,confirm"/> 
+				</field>
+
+			</field>
 		</record>
 
-		<menuitem action="action_presupuesto_cuentas_por_pagar" id="item_presupuesto_cuentas_por_pagar" name="Cuentas por pagar" parent="presupuesto.menu_view_presupuesto_gasto_form"/>-->
+
 
 	</data>
 </openerp>
