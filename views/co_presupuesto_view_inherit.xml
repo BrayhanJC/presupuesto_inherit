@@ -182,6 +182,17 @@
 					<filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
 				</xpath> 
 
+				<xpath expr="/search[@string='Search CDP']/filter[@string='Open']" position="replace">
+					<filter string="Borrador" domain="[('state','=','draft')]" icon="terp-camera_test"/>
+				</xpath> 
+
+				<xpath expr="/search[@string='Search CDP']/filter[@string='Closed']" position="replace">
+					<filter string="Confirmado" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+				</xpath> 
+				<xpath expr="/search[@string='Search CDP']/filter[@string='Confirmado']" position="after">
+					<filter string="Cerrado" domain="[('state','=','close')]" icon="terp-camera_test"/>
+				</xpath> 
+
 
 			</field>
 		</record>
@@ -195,6 +206,20 @@
 				<field name="name" position="after">
 					<field name="move_rel"/>
 				</field>
+
+
+				<xpath expr="/search[@string='Search Compromiso']/filter[@string='Open']" position="replace">
+					<filter string="Borrador" domain="[('state','=','draft')]" icon="terp-camera_test"/>
+				</xpath> 
+
+				<xpath expr="/search[@string='Search Compromiso']/filter[@string='Closed']" position="replace">
+					<filter string="Confirmado" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+				</xpath> 
+
+				<xpath expr="/search[@string='Search Compromiso']/filter[@string='Confirmado']" position="after">
+					<filter string="Cerrado" domain="[('state','=','close')]" icon="terp-camera_test"/>
+				</xpath> 
+
 
 				<xpath expr="/search[@string='Search Compromiso']/group[@expand='0']/filter[@string='Status']" position="after">
 					<filter string="Año actual" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
@@ -280,6 +305,20 @@
 
 			</field>
 		</record>
+
+
+		<record id="view_recaudo_inherit_form_presupuesto" model="ir.ui.view">
+		   <field name="inherit_id" ref="presupuesto.view_presupuesto_recaudo_move_form"/>
+			<field name="model">presupuesto.move</field>
+			<field name="arch" type="xml">
+
+				<field name="state" position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,confirm"/> 
+				</field>
+
+			</field>
+		</record>
+
 
 
 

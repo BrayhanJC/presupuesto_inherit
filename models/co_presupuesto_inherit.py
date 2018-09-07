@@ -287,7 +287,7 @@ class presupuesto_move_inherit(models.Model):
 			sql = """ 
 				update presupuesto_move set state = 'close'
 				where saldo_sin_utilizar <= 0
-				and doc_type <> 'pago'
+				and doc_type in ('cdp', 'rp', 'obl')
 				and state = 'confirm'
 			"""
 
