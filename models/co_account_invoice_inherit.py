@@ -53,6 +53,8 @@ class presupuesto_account_invoice_inherit(models.Model):
 						column2='destino_ids', 
 						domain=[('doc_type', '=' , 'reg')])
 
+	permitir_valor_manual = fields.Boolean("Permitir valor manual", default=False)
+
 	def create_obl(self, cr, uid, invoice, rubros_ids, context={}):
 
 		if not invoice.comment:
@@ -90,6 +92,15 @@ class presupuesto_account_invoice_inherit(models.Model):
 
 		presupuesto_move_id = presupuesto_move_obj.create(cr, uid, presupuesto_move, context=context)
 
+		amount = 0
+		if invoice.permitir_valor_manual and (len(invoice.rp_move_rel) > 1):
+			amount = 0
+		elif not invoice.permitir_valor_manual and (len(invoice.rp_move_rel) > 1):
+			amount = 0
+		elif invoice.permitir_valor_manual and (len(invoice.rp_move_rel) == 1):
+			amount = 0
+		elif not invoice.permitir_valor_manual and (len(invoice.rp_move_rel) == 1):
+			amount = invoice.amount_untaxed
 
 		gastos_ids = []
 		for rubros in rubros_ids:
@@ -100,7 +111,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 				'date': invoice.date_invoice,
 				'mov_type': 'obl',
 				'saldo_move': 0,
-				'ammount': 0 if len(invoice.rp_move_rel) > 1 else invoice.amount_untaxed,
+				'ammount': amount,
 				'move_rel_id': rubros.move_id.id
 			}
 			presupuesto_moverubros_obj.create(cr, uid, presupuesto_move_line, context=context)
@@ -124,6 +135,7 @@ class presupuesto_account_invoice_inherit(models.Model):
 		for x in invoice.rp_move_rel:
 			for line in x.gastos_ids:
 				if line: rubros_ids.append(line)
+
 
 		obl = self.create_obl(cr, uid, invoice, rubros_ids, context=context)
 		data_obj = self.pool.get('ir.model.data')

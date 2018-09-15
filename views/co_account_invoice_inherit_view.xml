@@ -24,6 +24,13 @@
                     <attribute name="attrs">{'invisible': ['|', ('rp','=', False), ('obl','!=', False), ('rp_move_rel','=', [(6, False, [])])]}</attribute>
                 </xpath>
 
+                <xpath expr="//button[@name='generate_obl']" position="after">
+                    <group col="4" colspan="6">
+                        <field name="permitir_valor_manual" attrs="{'invisible': ['|', ('rp','=', False), ('obl','!=', False), ('rp_move_rel','=', [(6, False, [])])]}"/>
+                    </group>
+                </xpath>
+
+
             </field>
         </record>
 
