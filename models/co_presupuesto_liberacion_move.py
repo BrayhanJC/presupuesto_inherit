@@ -88,7 +88,7 @@ class presupuesto_liberacion_rel(models.Model):
 
 	@api.multi
 	def button_liberar_presupuesto(self):
-		
+		presupuesto_tools = self.env['presupuesto.tools']
 		view_ref = self.env['ir.model.data'].get_object_reference('presupuesto_inherit', 'view_presupuesto_liberacion_form')
 		view_id = view_ref[ 1 ] if view_ref else False
 
@@ -117,7 +117,7 @@ class presupuesto_liberacion_rel(models.Model):
 		for data in self.gastos_ids:	
 			result = {}
 			result['rubros_id'] = data.rubros_id.id
-			result['saldo_move_'] = self._get_diff_money(data)
+			result['saldo_move_'] = presupuesto_tools._get_diff_money(data)
 			result['move_id'] = self.id
 			result['ammount'] = 0
 			result['mov_type'] = move_type
@@ -184,18 +184,18 @@ class presupuesto_liberacion_rel(models.Model):
 	"""		
 
 	def get_gastos_ids(self, gastos_ids):
-		
+		presupuesto_tools = self.env['presupuesto.tools']
 		if gastos_ids:
 
 			result = ()
 
 			if len(gastos_ids) == 1:
-				if self._get_diff_money(gastos_ids) > 0:
+				if presupuesto_tools._get_diff_money(gastos_ids) > 0:
 					result =(gastos_ids.id,)
 			else:
 
 				for data in gastos_ids:
-					if self._get_diff_money(data) > 0:
+					if presupuesto_tools._get_diff_money(data) > 0:
 						result += (data.id,)
 
 			return result
