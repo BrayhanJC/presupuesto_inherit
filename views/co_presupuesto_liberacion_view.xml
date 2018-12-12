@@ -108,6 +108,23 @@
             </field>
         </record>
 
+
+        <record id="view_presupuesto_liberaciones_search" model="ir.ui.view">
+            <field name="name">Liberaciones</field>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+                <search string="Search Liberaciones">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Liberacion"/>
+                    <filter string="Open" domain="[('state','=','draft')]" icon="terp-camera_test"/>
+                    <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-dialog-close"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_presupuesto_liberaciones" model="ir.actions.act_window">
             <field name="name">Liberaciones</field>
             <field name="res_model">presupuesto.move</field>
@@ -115,6 +132,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_presupuesto_liberaciones_tree"/>
             <field name="domain">[('doc_type','in', ('lcdp', 'lreg', 'lobl'))]</field>
+            <field name="search_view_id" ref="view_presupuesto_liberaciones_search"/>
+            <field name="filter" eval="True"/>
         </record>
 
         <record id="action_presupuesto_liberacion_tree" model="ir.actions.act_window.view">
@@ -131,7 +150,7 @@
             <field name="act_window_id" ref="action_presupuesto_liberaciones"/>
         </record>
 
-        <menuitem action="action_presupuesto_liberaciones" id="presupuesto_liberacion_form" parent="presupuesto.menu_view_presupuesto_gasto_form" sequence="100"/>
+        <menuitem action="action_presupuesto_liberaciones" id="presupuesto_liberacion_form" parent="presupuesto.menu_view_presupuesto_gasto_form" sequence="40"/>
 
 
 
