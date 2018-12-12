@@ -1,32 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Orden de pago presupuestal -->
+
+        <record id="view_presupuesto_liberacion_form_wizard" model="ir.ui.view">
+            <field name="name">Liberacion Presupuesto</field>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+                <form >
+                    <header>
+                        <button name="button_liberar_presupuesto_liberacion_" string="Liberar presupuesto" type="object" class="oe_highlight"/>
+                        <field name='id' invisible='1'/>
+                        <field name='llenar_campo_gastaos_liberaciones' invisible='1'/>
+                        <field name='state' invisible='1' />
+                    </header>
+                    <group>
+                      <group>
+                        <field name="date" />
+                        <field name="period_id" invisible="1" />
+                        <field name="fiscal_year" invisible="1"/>
+                        <field name="partner_id"/>
+                      </group>
+                      <group>
+                        <field name="name"/>
+                        <field name="doc_type" invisible="1"/>
+                      </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Rubros">
+                            <field name='gastos_liberacion_ids'>
+                                <tree editable="botton">
+                                    <field name='move_id' invisible='1'/>
+                                    <field name='mov_type' invisible='1'/>
+                                    <field name='rubros_id' readonly='1'/>
+                                    <field name='saldo_move_' readonly='1'/>
+                                    <field name='ammount'/>
+                                    <field name='move_rel_id' readonly='1'/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+
+
+
+
         <record id="view_presupuesto_liberacion_form" model="ir.ui.view">
             <field name="name">Liberacion Presupuesto</field>
             <field name="model">presupuesto.move</field>
             <field name="arch" type="xml">
                 <form >
                     <header>
-                        <button name="button_liberar_presupuesto_liberacion" string="Liberar presupuesto" type="object" class="oe_highlight"/>
-                    </header>
                     <field name='id' invisible='1'/>
-                    <field name='llenar_campo_gastaos_liberaciones' invisible='1'/>
-                    <field name='state' invisible='1'/>
-
-                    <field name='gastos_liberacion_ids'  attrs="{'readonly': [('state','=','draft')]}" >
-                        <tree editable="botton">
-                            <field name='move_id' invisible='1'/>
-                            <field name='mov_type' invisible='1'/>
-                            <field name='rubros_id' />
-                            <field name='saldo_move_'/>
-                            <field name='ammount'/>
-                            <field name='move_rel_id' readonly='1'/>
-                        </tree>
-
-                    </field>
+                    <button name="button_liberar_presupuesto_liberacion" states="draft" string="Confirmar" type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm" />
+                    </header>
+                    <group>
+                      <group>
+                        <field name="date" />
+                        <field name="period_id" invisible="1" />
+                        <field name="fiscal_year" invisible="1"/>
+                        <field name="partner_id"/>
+                      </group>
+                      <group>
+                        <field name="name"/>
+                        <field name="doc_type" invisible="1"/>
+                      </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Rubros">
+                            <field name='gastos_liberacion_ids'>
+                                <tree editable="botton">
+                                    <field name='move_id' invisible='1'/>
+                                    <field name='mov_type' invisible='1'/>
+                                    <field name='rubros_id' readonly='1'/>
+                                    <field name='saldo_move_' readonly='1'/>
+                                    <field name='ammount'/>
+                                    <field name='move_rel_id' readonly='1'/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
+
+        <record id="view_presupuesto_liberaciones_tree" model="ir.ui.view">
+            <field name="name">Liberaciones</field>
+            <field name="model">presupuesto.move</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';gray:state == 'done' " string="Liberaciones">
+                    <field name="name"/>
+                    <field name="fiscal_year"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="description"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_presupuesto_liberaciones" model="ir.actions.act_window">
+            <field name="name">Liberaciones</field>
+            <field name="res_model">presupuesto.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="view_presupuesto_liberaciones_tree"/>
+            <field name="domain">[('doc_type','in', ('lcdp', 'lreg', 'lobl'))]</field>
+        </record>
+
+        <record id="action_presupuesto_liberacion_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_presupuesto_liberaciones_tree"/>
+            <field name="act_window_id" ref="action_presupuesto_liberaciones"/>
+        </record>
+
+        <record id="action_presupuesto_liberacion_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_presupuesto_liberacion_form"/>
+            <field name="act_window_id" ref="action_presupuesto_liberaciones"/>
+        </record>
+
+        <menuitem action="action_presupuesto_liberaciones" id="presupuesto_liberacion_form" parent="presupuesto.menu_view_presupuesto_gasto_form" sequence="100"/>
+
+
+
+
+
+
     </data>
 </openerp>

@@ -56,12 +56,6 @@ class presupuesto_liberacion_rel(models.Model):
 									domain=[('rubros_id.rubro_tipo', '=', 'G'), 
 											('mov_type', 'in', ['obl', 'cdp', 'reg', 'pago', 'lib', 'ini', 'mod', 'rec', 'adi', 'cre','cont', 'red'])])
 	
-
-
-
-
-
-
 	gastos_liberacion_ids = fields.One2many('presupuesto.moverubros', 'move_id', string=u'Rubros', states={'confirm': [('readonly', True)]},
 									domain=[('rubros_id.rubro_tipo', '=', 'G'), ('mov_type', 'in', ['lobl', 'lcdp', 'lreg'])])
 		
@@ -89,18 +83,24 @@ class presupuesto_liberacion_rel(models.Model):
 	@api.multi
 	def button_liberar_presupuesto(self):
 		presupuesto_tools = self.env['presupuesto.tools']
-		view_ref = self.env['ir.model.data'].get_object_reference('presupuesto_inherit', 'view_presupuesto_liberacion_form')
+		view_ref = self.env['ir.model.data'].get_object_reference('presupuesto_inherit', 'view_presupuesto_liberacion_form_wizard')
 		view_id = view_ref[ 1 ] if view_ref else False
-
+		move_type = self.get_mov_type(self.doc_type)
+		
+		result = {}
+		result['partner_id'] = self.partner_id.id
+		result['date'] = date.today().strftime('%d-%m-%Y')
+		result['period_id'] = self.period_id.id
+		result['description'] = "Liberacion de presupuesto"
+		result['doc_type'] = move_type
+		result['fiscal_year'] = self.fiscal_year.id
+		
+		presupuesto_libreacion_id = self.env['presupuesto.move'].create(result)
 
 		gastos_ids = list(set(self.get_gastos_ids(self.gastos_ids)))
 
 		if not gastos_ids:
 			raise osv.except_osv(u'Información', "No hay nada para liberar")
-
-
-		move_type = self.get_mov_type(self.doc_type)
-
 
 		sql = """ 
 			delete from presupuesto_moverubros
@@ -114,17 +114,20 @@ class presupuesto_liberacion_rel(models.Model):
 
 		self.env.cr.execute( sql )
 		
-		for data in self.gastos_ids:	
-			result = {}
-			result['rubros_id'] = data.rubros_id.id
-			result['saldo_move_'] = presupuesto_tools._get_diff_money(data)
-			result['move_id'] = self.id
-			result['ammount'] = 0
-			result['mov_type'] = move_type
-			result['move_rel_id'] = data.move_rel_id.id
-	
-			if not self.env['presupuesto.moverubros'].search([('move_id', '=', self.id), ('mov_type', '=', move_type), ('rubros_id', '=', data.rubros_id.id)]): 
-				self.env['presupuesto.moverubros'].create(result)	
+		for data in self.gastos_ids:
+				
+			presupuesto = presupuesto_tools._get_diff_money(data) 
+			if presupuesto > 0:
+				result = {}
+				result['rubros_id'] = data.rubros_id.id
+				result['saldo_move_'] = self.saldo_sin_utilizar
+				result['move_id'] = presupuesto_libreacion_id.id
+				result['ammount'] = 0
+				result['mov_type'] = move_type
+				result['move_rel_id'] = self.id
+		
+				if not self.env['presupuesto.moverubros'].search([('move_id', '=', presupuesto_libreacion_id.id), ('mov_type', '=', move_type), ('rubros_id', '=', data.rubros_id.id)]): 
+					self.env['presupuesto.moverubros'].create(result)	
 
 
 		return {
@@ -133,30 +136,49 @@ class presupuesto_liberacion_rel(models.Model):
 			'res_model': 'presupuesto.move',
 			'type': 'ir.actions.act_window',
 			'view_id': view_id,
-			'res_id': self.id,
+			'res_id': presupuesto_libreacion_id.id,
 			'context': {'move_id': self.id, 'move_type': move_type},
 			'nodestroy': True,
 			'target': 'new',
 		}
 
 
+	@api.multi
+	def button_liberar_presupuesto_liberacion_(self):
+		pass
+
 
 	@api.multi
 	def button_liberar_presupuesto_liberacion(self):
+
+		presupuesto_move_rubros_obj = self.env['presupuesto.moverubros']			
+
+		for x in self.gastos_liberacion_ids:
+			#el primer documento es el al cual se le va hacer la liberacion
+			primer_documento = presupuesto_move_rubros_obj.search([('move_id', '=', x.move_rel_id.id)], limit=1)
+
+			if primer_documento:
+				if 	primer_documento.move_id.saldo_sin_utilizar > 0:
+					saldo_primer_documento =  primer_documento.move_id.saldo_sin_utilizar - x.ammount
+					primer_documento.move_id.write({'saldo_sin_utilizar': saldo_primer_documento})
+					#segundo documento es el documento padre del documento al cual se le va hacer la liberacion
+					#ejemplo si queremos hacer la liberacion de una obligacion entonces el segundo documento
+					# es un compromiso. 
+					segundo_documento = presupuesto_move_rubros_obj.search([('move_id', '=', primer_documento.move_rel_id.id)], limit=1)
+					if segundo_documento:
+						saldo_segundo_documento = segundo_documento.move_id.saldo_sin_utilizar + x.ammount
+						segundo_documento.move_id.write({'saldo_sin_utilizar': saldo_segundo_documento})
+				else:
+    				
+					raise Warning(_(u'No hay nada para liberar'))
+			
 		
-		_logger.info(self.gastos_liberacion_ids)
+		self.write({'state': 'confirm'})
 
-		for data in self.gastos_liberacion_ids:
-
-			if data.ammount > 0:
-
-				_logger.info(data)
+		
 
 
-
-
-		pass
-
+		
 
 
 

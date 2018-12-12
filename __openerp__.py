@@ -44,6 +44,7 @@
         'views/co_contract_modification.xml',
         'views/hr_payslip_view_inherit.xml',
         'views/presupuesto_actualizar_estado_documento.xml',
+        'views/presupuesto_sequence_inherit.xml',
     ],
     'installable': True,
     'auto_install': False,

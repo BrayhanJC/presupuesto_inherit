@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<openerp>
+  <data noupdate="1">
+
+    <!-- Sequence type for cdp -->
+    <record model="ir.sequence.type" id="seq_type_lcdp">
+      <field name="name">LCDP</field>
+      <field name="code">lcdp.sequence</field>
+    </record>
+
+    <!--Sequence for cdp -->
+    <record model="ir.sequence" id="seq_lcdp">
+      <field name="name">N° de LCDP</field>
+      <field name="code">lcdp.sequence</field>
+      <field name="padding" eval="4"/>
+      <field name="prefix">LCDP-%(y)s-</field>
+    </record>
+
+    <!-- Sequence type for registro presupuestal -->
+    <record model="ir.sequence.type" id="seq_type_lcompromiso">
+      <field name="name">Liberacion compromiso</field>
+      <field name="code">lcompromiso.sequence</field>
+    </record>
+
+    <!--Sequence for registro presupuestal -->
+    <record model="ir.sequence" id="seq_lcompromiso">
+      <field name="name">N° de Registro liberacion presupuestal</field>
+      <field name="code">lcompromiso.sequence</field>
+      <field name="padding" eval="4"/>
+      <field name="prefix">LRP-%(y)s-</field>
+    </record>
+
+    <!-- Sequence type for obligación presupuestal -->
+    <record model="ir.sequence.type" id="seq_type_lobligacion">
+      <field name="name">Liberacion obligacion</field>
+      <field name="code">lobligacion.sequence</field>
+    </record>
+
+    <!--Sequence for obligación presupuestal -->
+    <record model="ir.sequence" id="seq_lobligacion">
+      <field name="name">N° de liberacion Obligación</field>
+      <field name="code">lobligacion.sequence</field>
+      <field name="padding" eval="4"/>
+      <field name="prefix">LOB-%(y)s-</field>
+    </record>
+
+  </data>
+</openerp>

@@ -47,7 +47,6 @@ class presupuesto_move_inherit(models.Model):
 	_order = 'date desc'
 
 
-
 	@api.model
 	def create(self, vals):
 
@@ -59,6 +58,31 @@ class presupuesto_move_inherit(models.Model):
 
 				raise Warning(_(u'El periodo que se está usando ya está cerrado'))
 
+
+		if not vals.get('name'):
+				
+			if vals.get('doc_type')=='lcdp':
+				vals['name'] = self.env['ir.sequence'].get('lcdp.sequence')
+			elif vals.get('doc_type')=='lreg':
+				vals['name'] = self.env['ir.sequence'].get('lcompromiso.sequence')
+			elif vals.get('doc_type')=='lobl':
+				vals['name'] = self.env['ir.sequence'].get('lobligacion.sequence')
+			elif vals.get('doc_type')=='rec':
+				vals['name'] = self.env['ir.sequence'].get('recaudo.sequence')
+			elif vals.get('doc_type')=='cdp':
+				vals['name'] = self.env['ir.sequence'].get('cdp.sequence')
+			elif vals.get('doc_type')=='reg':
+				vals['name'] = self.env['ir.sequence'].get('compromiso.sequence')
+			elif vals.get('doc_type')=='obl':
+				vals['name'] = self.env['ir.sequence'].get('obligacion.sequence')
+			elif vals.get('doc_type')=='pago':
+				vals['name'] = self.env['ir.sequence'].get('pago.sequence')
+			elif vals.get('doc_type')=='ini':
+				vals['name'] = self.env['ir.sequence'].get('inicial.sequence')
+			elif vals.get('doc_type')=='mod':
+				vals['name'] = self.env['ir.sequence'].get('modificacion.sequence')
+			else :
+				vals['name'] = "/"			
 
 
 		return super(presupuesto_move_inherit, self).create(vals)
@@ -105,7 +129,9 @@ class presupuesto_move_inherit(models.Model):
 								('reg', 'Compromiso'),
 								('obl', 'Obligación'),
 								('pago', 'Pago'),
-								('lib', 'Liberación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
+								('lcdp', 'Liberación CDP'),
+								('lreg', 'Liberación Compromiso'),
+								('lobl', 'Liberación Obligación')], 'Tipo', select=True, required=True, states={'confirm': [('readonly', True)]})
 	
 
 	hide_button_confirm= fields.Boolean(compute='_hide_button_confirm', default=False)	
@@ -154,13 +180,10 @@ class presupuesto_move_inherit(models.Model):
 	@api.one
 	@api.onchange('gastos_ids')
 	def hide_button_change(self):
-		tools = self.env['presupuesto.tools']
-		if self.gastos_ids:
-			diff = tools._get_diff_money(self.gastos_ids)
-			if diff <= 0:
-				self.hide_button_confirm = True
-			else:
-				self.hide_button_confirm = False
+		if self.saldo_sin_utilizar <= 0:
+			self.hide_button_confirm = True
+		else:
+			self.hide_button_confirm = False
 	
 
 	""" 
@@ -171,22 +194,16 @@ class presupuesto_move_inherit(models.Model):
 	"""
 	@api.one
 	def _hide_button_confirm(self):
-		tools = self.env['presupuesto.tools']
-		if self.gastos_ids:
-			diff = tools._get_diff_money(self.gastos_ids)
-			if diff <= 0:
-				self.hide_button_confirm = True
-			else:
-				self.hide_button_confirm = False
+			
+		if self.saldo_sin_utilizar <= 0:
+			self.hide_button_confirm = True
+		else:
+			self.hide_button_confirm = False
 
 
 
 
-	""" 
-		boton que nos sirve para liberar el presupuesto es usado en la vista
-		de cdp, compromiso y obligacion
-
-	"""         
+   
 
 
 	@api.onchange('presupuesto_rel_move')
@@ -258,7 +275,7 @@ class presupuesto_move_inherit(models.Model):
 	@api.model
 	def actualizar_estado_documento(self):
 
-		
+		_logger.info("inicie")		
 		presupuesto_tools = self.env['presupuesto.tools']
 
 
@@ -277,13 +294,14 @@ class presupuesto_move_inherit(models.Model):
 					from presupuesto_move pm
 					where pm.id = %(id)s)
 					where id = %(id)s
+					and doc_type not in ('lcdp', 'lrp', 'lobl') 
 				"""% {
 					'id': list(x)[0],
 				}
 
 				self.env.cr.execute( sql )
 				
-
+	
 			sql = """ 
 				update presupuesto_move set state = 'close'
 				where saldo_sin_utilizar <= 0
