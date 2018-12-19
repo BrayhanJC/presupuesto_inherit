@@ -97,9 +97,7 @@ class presupuesto_liberacion_rel(models.Model):
 		
 		presupuesto_libreacion_id = self.env['presupuesto.move'].create(result)
 
-		gastos_ids = list(set(self.get_gastos_ids(self.gastos_ids)))
-
-		if not gastos_ids:
+		if self.saldo_sin_utilizar <= 0:
 			raise osv.except_osv(u'Información', "No hay nada para liberar")
 
 		sql = """ 
