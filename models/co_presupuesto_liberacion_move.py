@@ -96,11 +96,9 @@ class presupuesto_liberacion_rel(models.Model):
 		result['fiscal_year'] = self.fiscal_year.id
 		
 		presupuesto_libreacion_id = self.env['presupuesto.move'].create(result)
-		_logger.info(self..gastos_ids)
-		_logger.info(self.get_gastos_ids(self.gastos_ids))
-		gastos_ids = list(set(self.get_gastos_ids(self.gastos_ids)))
+		
 
-		if not gastos_ids:
+		if self.saldo_sin_utilizar <= 0:
 			raise osv.except_osv(u'Información', "No hay nada para liberar")
 
 		sql = """ 
@@ -117,7 +115,7 @@ class presupuesto_liberacion_rel(models.Model):
 		
 		for data in self.gastos_ids:
 				
-			presupuesto = presupuesto_tools._get_diff_money(data) 
+			presupuesto = self.saldo_sin_utilizar 
 			if presupuesto > 0:
 				result = {}
 				result['rubros_id'] = data.rubros_id.id
@@ -170,7 +168,7 @@ class presupuesto_liberacion_rel(models.Model):
 						saldo_segundo_documento = segundo_documento.move_id.saldo_sin_utilizar + x.ammount
 						segundo_documento.move_id.write({'saldo_sin_utilizar': saldo_segundo_documento})
 				else:
-    				
+					
 					raise Warning(_(u'No hay nada para liberar'))
 			
 		
