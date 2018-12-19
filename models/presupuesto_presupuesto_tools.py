@@ -113,6 +113,8 @@ class Presupuesto(models.Model):
 			for data in ids:
 				saldo_move += data.saldo_move
 				ammount += data.ammount
+			_logger.info(saldo_move)
+			_logger.info(ammount)
 			return saldo_move - ammount
 
 

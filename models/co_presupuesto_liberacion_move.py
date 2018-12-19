@@ -96,8 +96,11 @@ class presupuesto_liberacion_rel(models.Model):
 		result['fiscal_year'] = self.fiscal_year.id
 		
 		presupuesto_libreacion_id = self.env['presupuesto.move'].create(result)
+		_logger.info(self..gastos_ids)
+		_logger.info(self.get_gastos_ids(self.gastos_ids))
+		gastos_ids = list(set(self.get_gastos_ids(self.gastos_ids)))
 
-		if self.saldo_sin_utilizar <= 0:
+		if not gastos_ids:
 			raise osv.except_osv(u'Información', "No hay nada para liberar")
 
 		sql = """ 
