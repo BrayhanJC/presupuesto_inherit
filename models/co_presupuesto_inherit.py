@@ -106,6 +106,7 @@ class presupuesto_move_inherit(models.Model):
 	def button_confirm(self):
 		res = self.write({'state': 'confirm'})
 		self._saldo_sin_utilizar(self.presupuesto_rel_move)
+		self._saldo_sin_utilizar(self)
 		return res
 
 	@api.multi
