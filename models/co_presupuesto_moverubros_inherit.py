@@ -155,14 +155,13 @@ class presupuesto_moverubros_inherit(models.Model):
 			move_saldo = saldo_resta = saldo_suma = 0.0
 			for move in ids:
 				if move.mov_type == 'ini' or move.mov_type == 'adi' or move.mov_type == 'cre':
-
-					if move.mov_type == 'lcdp' and move.move_id.state == 'confirm':
-						saldo_suma += move.ammount
-					else:
-						saldo_suma += move.ammount
+					
+					saldo_suma += move.ammount
 
 				if move.mov_type == 'red' or move.mov_type == 'cont' or move.mov_type == 'cdp' or move.mov_type == 'rec':
 					saldo_resta += move.ammount
+					if move.mov_type == 'lcdp' and move.move_id.state == 'confirm':
+						saldo_suma += move.ammount
 				move_saldo = (saldo_suma - saldo_resta) if saldo_suma else saldo_resta
 
 			self.saldo_move = move_saldo
