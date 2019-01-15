@@ -163,10 +163,14 @@ class presupuesto_liberacion_rel(models.Model):
 					#segundo documento es el documento padre del documento al cual se le va hacer la liberacion
 					#ejemplo si queremos hacer la liberacion de una obligacion entonces el segundo documento
 					# es un compromiso. 
-					segundo_documento = presupuesto_move_rubros_obj.search([('move_id', '=', primer_documento.move_rel_id.id)], limit=1)
-					if segundo_documento:
-						saldo_segundo_documento = segundo_documento.move_id.saldo_sin_utilizar + x.ammount
-						segundo_documento.move_id.write({'saldo_sin_utilizar': saldo_segundo_documento})
+
+
+					if primer_documento.mov_type != 'cdp':
+
+						segundo_documento = presupuesto_move_rubros_obj.search([('move_id', '=', primer_documento.move_rel_id.id)], limit=1)
+						if segundo_documento:
+							saldo_segundo_documento = segundo_documento.move_id.saldo_sin_utilizar + x.ammount
+							segundo_documento.move_id.write({'saldo_sin_utilizar': saldo_segundo_documento})
 				else:
 					
 					raise Warning(_(u'No hay nada para liberar'))
