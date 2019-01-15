@@ -49,7 +49,7 @@ class presupuesto_move_inherit(models.Model):
 
 	@api.model
 	def create(self, vals):
-
+		_logger.info(vals)
 		if 'period_id' in vals:
 
 			period = self.env['account.period'].browse(vals.get('period_id'))
@@ -84,7 +84,7 @@ class presupuesto_move_inherit(models.Model):
 			else :
 				vals['name'] = "/"			
 
-
+		
 		return super(presupuesto_move_inherit, self).create(vals)
 
 
@@ -228,14 +228,8 @@ class presupuesto_move_inherit(models.Model):
 
 
 
-	@api.onchange('date')
+	@api.onchange('date', 'period_id', 'fiscal_year')
 	def onchange_date(self):
-
-		doc_type = {'reg' : 'cdp', 'obl': 'reg', 'pago': 'obl'}
-
-		presupuesto_tools = self.env['presupuesto.tools']
-		presupuesto_rel_move = []
-
 		if self.date:
 			period = self.env['account.period'].find(self.date)
 			self.period_id = period.id
