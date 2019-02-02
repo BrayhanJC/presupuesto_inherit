@@ -204,9 +204,7 @@ class presupuesto_move_inherit(models.Model):
 
 
 
-   
-
-
+  
 	@api.onchange('presupuesto_rel_move')
 	def _onchange_rel_move_ids(self):
 
@@ -217,8 +215,18 @@ class presupuesto_move_inherit(models.Model):
 			lista_rubros = []
 			for x in val_rel_ids:
 				cdp_moverubros = rpre_moverubros.search([('move_id.id', '=', x.id)])
+
+				sql = """
+					SELECT saldo_move 
+					FROM presupuesto_moverubros
+					WHERE move_id = %(id)s
+				"""%{'id': x.id}
+				self.env.cr.execute(sql)
+				saldo_move =  self.env.cr.fetchall()
+
+
 				for rubro in cdp_moverubros:
-					if rubro.saldo_move > 0:
+					if saldo_move > 0:
 						lista_rubros.append((0,0,{'move_id' : self.id , 'ammount':0 , 'rubros_id' : rubro.rubros_id.id, 'mov_type' : self.doc_type, 'date' : datetime.now().strftime('%Y-%m-%d'), 'period_id' : self.period_id.id, 'move_rel_id':x.id}))
 			self.gastos_ids = lista_rubros
 		else:
@@ -284,10 +292,14 @@ class presupuesto_move_inherit(models.Model):
 			for x in sql_result:
 
 				sql = """ 
-					update presupuesto_move set saldo_sin_utilizar = (select pm.amount_total - CASE WHEN (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s) > 0 
+					UPDATE presupuesto_move SET saldo_sin_utilizar = 
+					CASE WHEN (select state from presupuesto_move pm2, presupuesto_moverubros pmr2 where pm2.id = pmr2.move_id AND pmr2.move_rel_id = %(id)s) = 'confirm'
+					THEN
+					(select pm.amount_total - CASE WHEN (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s) > 0 
 					THEN (select sum(pmr.ammount) from presupuesto_moverubros pmr where move_rel_id = %(id)s) ELSE 0 END
 					from presupuesto_move pm
-					where pm.id = %(id)s)
+					where pm.id = %(id)s and state in ('confirm'))
+					ELSE amount_total END
 					where id = %(id)s
 					and doc_type not in ('lcdp', 'lrp', 'lobl') 
 				"""% {
